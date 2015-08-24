@@ -1,2 +1,2 @@
 # MyDream
-game
+my game
