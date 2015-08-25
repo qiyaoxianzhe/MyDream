@@ -40,6 +40,56 @@ end
 function BattleManager:onCreate(battleScene)
     printf("BattleManager:onCreate")
 	self.battleScene_ = battleScene
+	self:initRoomPanel_()
+    self:initPlay_()
+    self:initTouch_()
+end
+
+function BattleManager:initRoomPanel_()
+	self.roomPanel_ = display.newLayer()
+    self.battleScene_:addChild(self.roomPanel_)
+    self.roomPanel_:setPosition(display.cx,display.cy)
+end
+
+function BattleManager:initPlay_()
+end
+
+function BattleManager:initTouch_()
+	self.roomPanel_:setTouchEnabled(true)
+    self.roomPanel_:registerScriptTouchHandler(handler(self,self.touch_))
+end
+
+function BattleManager:touch_(event,x,y)
+	local direction = "ideal"
+	if event == "began" then
+		self.beginPox_ = cc.p(x,y)
+		return true			
+	elseif event == "moved" then
+	elseif event == "ended" then
+		self.endPox_ = cc.p(x,y)
+		local pos = cc.pSub(self.endPox_,self.beginPox_)
+		if math.abs(pos.x) > math.abs(pos.y) then
+			if pos.x > 0 then
+				direction = "right"
+			else
+				direction = "left"
+			end
+		else
+			if pos.y > 0 then
+				direction = "up"
+			else
+				direction = "down"
+			end
+		end
+		self.beginPox_ = cc.p(0,0)
+		self.endPox_ = cc.p(0,0)
+		self:controlDirection(direction)
+	end
+end
+
+function BattleManager:controlDirection(direction)
+	--todo 增加控制逻辑 
+	printf("direction : %s",direction)
 end
 
 function BattleManager:initUI_()
