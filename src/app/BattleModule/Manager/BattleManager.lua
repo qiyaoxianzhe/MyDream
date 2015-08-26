@@ -23,9 +23,19 @@ function BattleManager:getBarrierManager()
 	return o.barrierManager_
 end
 
-function BattleManager:getEnemyManager()
+function BattleManager:getActorManager()
 	local o = BattleManager:getInstance()
-	return o.enemyManager_
+	return o.actorManager_
+end
+
+function BattleManager:getItemManager()
+	local o = BattleManager:getInstance()
+	return o.itemManager_
+end
+
+function BattleManager:getCurrentRomm()
+	local o = BattleManager:getInstance()
+	return o.room_
 end
 
 function BattleManager:getBattleUI()
@@ -39,19 +49,28 @@ end
 
 function BattleManager:onCreate(battleScene)
     printf("BattleManager:onCreate")
-	self.battleScene_ = battleScene
+    self.battleScene_ = battleScene
+    self.barrierManager_ = BarrierManager.new()
+    self.actorManager_ = ActorManager.new()
+    self.itemManager_ = ItemManager.new()
+    self:addSysChild(self.barrierManager_)
+    self:addSysChild(self.actorManager_)
+    self:addSysChild(self.itemManager_)
 	self:initRoomPanel_()
-    self:initPlay_()
+	self:initRoom_()
     self:initTouch_()
+end
+
+function BattleManager:initRoom_()
+	self.room_ = Room.new(self.roomPanel_)
+	self:addSysChild(self.room_)
 end
 
 function BattleManager:initRoomPanel_()
 	self.roomPanel_ = display.newLayer()
+	self.roomPanel_:setContentSize(cc.size(BattleCommonDefine.ROOM_WIDTH,BattleCommonDefine.ROOM_HEIGHT))
     self.battleScene_:addChild(self.roomPanel_)
     self.roomPanel_:setPosition(display.cx,display.cy)
-end
-
-function BattleManager:initPlay_()
 end
 
 function BattleManager:initTouch_()
@@ -90,12 +109,16 @@ end
 function BattleManager:controlDirection(direction)
 	--todo 增加控制逻辑 
 	printf("direction : %s",direction)
+	if self.room_ then
+		self.room_:controlDirection(direction)
+	end
 end
 
 function BattleManager:initUI_()
 end
 
-function BattleManager:beginBattle()
+function BattleManager:beginGame()
+	self.room_:initLocationer()
 end
 
 function BattleManager:onUpdate(t)

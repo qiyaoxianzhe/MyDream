@@ -15,6 +15,7 @@ ClassImport.VO = "VO."
 ClassImport.BattleManagerRoot = ClassImport.BattleRoot.."Manager."
 ClassImport.BattleActorRoot = ClassImport.BattleRoot.."Actor."
 ClassImport.BattleBarrierRoot = ClassImport.BattleRoot.."Barrier."
+ClassImport.BattleItemRoot = ClassImport.BattleRoot.."Item."
 ClassImport.BattleRoomRoot = ClassImport.BattleRoot.."Room."
 
 ClassImport.define = {
@@ -22,14 +23,18 @@ ClassImport.define = {
 	ClassImport.WidgetRoot.."ArmatureLoader",
 	ClassImport.Components.."EventCom",
 	ClassImport.Components.."StateMachine",
-	ClassImport.BattleRoot.."BattleCommonDefine",
 	ClassImport.Components.."System",
+	ClassImport.Components.."Locationer",
+	ClassImport.BattleRoot.."BattleCommonDefine",
 	ClassImport.UIRoot.."BattleUI",
 	ClassImport.BattleActorRoot.."Actor",
+	ClassImport.BattleItemRoot.."Item",
+	ClassImport.BattleRoomRoot.."Room",
 	ClassImport.BattleBarrierRoot.."Barrier",
 	ClassImport.BattleManagerRoot.."BattleManager",
+	ClassImport.BattleManagerRoot.."ItemManager",
 	ClassImport.BattleManagerRoot.."BarrierManager",
-	ClassImport.BattleManagerRoot.."EnemyManager",
+	ClassImport.BattleManagerRoot.."ActorManager",
 }
 
 function ClassImport.import()
