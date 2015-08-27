@@ -50,6 +50,7 @@ end
 function BattleManager:onCreate(battleScene)
     printf("BattleManager:onCreate")
     self.battleScene_ = battleScene
+    self.isMove_ = false
     self.barrierManager_ = BarrierManager.new()
     self.actorManager_ = ActorManager.new()
     self.itemManager_ = ItemManager.new()
@@ -61,15 +62,24 @@ function BattleManager:onCreate(battleScene)
     self:initTouch_()
 end
 
+function BattleManager:isMove()
+	return self.isMove_
+end
+
+function BattleManager:setMove(isMove)
+	self.isMove_ = isMove
+end
+
 function BattleManager:initRoom_()
 	self.room_ = Room.new(self.roomPanel_)
 	self:addSysChild(self.room_)
 end
 
 function BattleManager:initRoomPanel_()
-	self.roomPanel_ = display.newLayer()
-	self.roomPanel_:setContentSize(cc.size(BattleCommonDefine.ROOM_WIDTH,BattleCommonDefine.ROOM_HEIGHT))
+	self.roomPanel_ = cc.LayerColor:create(cc.c4b(100, 100, 100, 255),BattleCommonDefine.ROOM_WIDTH,BattleCommonDefine.ROOM_HEIGHT)
     self.battleScene_:addChild(self.roomPanel_)
+    self.roomPanel_:ignoreAnchorPointForPosition(false)
+    self.roomPanel_:setAnchorPoint(cc.p(0.5,0.5))
     self.roomPanel_:setPosition(display.cx,display.cy)
 end
 
@@ -89,15 +99,15 @@ function BattleManager:touch_(event,x,y)
 		local pos = cc.pSub(self.endPox_,self.beginPox_)
 		if math.abs(pos.x) > math.abs(pos.y) then
 			if pos.x > 0 then
-				direction = "right"
+				direction = BattleCommonDefine.DIRECTION_RIGHT
 			else
-				direction = "left"
+				direction = BattleCommonDefine.DIRECTION_LEFT
 			end
 		else
 			if pos.y > 0 then
-				direction = "up"
+				direction = BattleCommonDefine.DIRECTION_UP
 			else
-				direction = "down"
+				direction = BattleCommonDefine.DIRECTION_DOWN
 			end
 		end
 		self.beginPox_ = cc.p(0,0)
@@ -108,8 +118,8 @@ end
 
 function BattleManager:controlDirection(direction)
 	--todo 增加控制逻辑 
-	printf("direction : %s",direction)
-	if self.room_ then
+	printf("direction : %d",direction)
+	if self.room_ and not self.isMove_ then
 		self.room_:controlDirection(direction)
 	end
 end

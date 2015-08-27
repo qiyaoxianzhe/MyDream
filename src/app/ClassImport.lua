@@ -28,6 +28,8 @@ ClassImport.define = {
 	ClassImport.BattleRoot.."BattleCommonDefine",
 	ClassImport.UIRoot.."BattleUI",
 	ClassImport.BattleActorRoot.."Actor",
+	ClassImport.BattleActorRoot.."ActoAni",
+	ClassImport.BattleActorRoot.."ActorAttr",
 	ClassImport.BattleItemRoot.."Item",
 	ClassImport.BattleRoomRoot.."Room",
 	ClassImport.BattleBarrierRoot.."Barrier",
