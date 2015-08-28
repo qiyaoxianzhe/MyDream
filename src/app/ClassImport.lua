@@ -31,12 +31,18 @@ ClassImport.define = {
 	ClassImport.BattleActorRoot.."ActoAni",
 	ClassImport.BattleActorRoot.."ActorAttr",
 	ClassImport.BattleItemRoot.."Item",
+	ClassImport.BattleItemRoot.."ItemAni",
 	ClassImport.BattleRoomRoot.."Room",
 	ClassImport.BattleBarrierRoot.."Barrier",
+	ClassImport.BattleBarrierRoot.."BarrierAni",
 	ClassImport.BattleManagerRoot.."BattleManager",
 	ClassImport.BattleManagerRoot.."ItemManager",
 	ClassImport.BattleManagerRoot.."BarrierManager",
 	ClassImport.BattleManagerRoot.."ActorManager",
+}
+
+ClassImport.config = {
+	ClassImport.VO.."MapVO",
 }
 
 function ClassImport.import()
@@ -45,10 +51,20 @@ function ClassImport.import()
 		local filePathTable = string.split(filePath,".")
 		GLOBAL_VAR[filePathTable[#filePathTable]] = require("app."..filePath)
 	end
+	for i=1,#ClassImport.config do
+		local filePath = ClassImport.config[i]
+		local filePathTable = string.split(filePath,".")
+		GLOBAL_VAR[filePathTable[#filePathTable]] = require("app."..filePath)
+	end
 end
 
 function ClassImport.unimport()
 	for i=1,#ClassImport.define do
+		local filePath = ClassImport.define[i]
+		local filePathTable = string.split(filePaht,".")
+		GLOBAL_VAR[filePathTable[#filePathTable]] = nil
+	end
+	for i=1,#ClassImport.config do
 		local filePath = ClassImport.define[i]
 		local filePathTable = string.split(filePaht,".")
 		GLOBAL_VAR[filePathTable[#filePathTable]] = nil

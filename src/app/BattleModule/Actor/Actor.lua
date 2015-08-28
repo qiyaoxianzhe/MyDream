@@ -18,6 +18,15 @@ function Actor:getStep()
 	return self.attr_:getValue("step")
 end
 
+function Actor:doWithBarrier(barrier)
+	return false
+end
+
+function Actor:doWithItem(item)
+	item:disppear()
+	return true
+end
+
 function Actor:move(x,y,step)
 	BattleManager:getInstance():setMove(true)
 	local offset = 5

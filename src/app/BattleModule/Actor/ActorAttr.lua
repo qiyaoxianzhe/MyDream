@@ -8,7 +8,7 @@ ActorAttr.TYPE = "ACTORATTR_TYPE"
 
 function ActorAttr:onCreate()
 	self.config_ = {
-		["step"] = 10
+		["step"] = 1
 	}
 end
 
