@@ -6,16 +6,21 @@
 local Actor = class("Actor",Locationer)
 Actor.TYPE = "ACTOR_TYPE"
 
-function Actor:onCreate(location)
+function Actor:onCreate(id, location)
 	Actor.super.onCreate(self,location)
 	self.ani_ = ActoAni.new(self.node_)
 	self:addSysChild(self.ani_)
 	self.attr_ = ActorAttr.new()
 	self:addSysChild(self.attr_)
+	self.id_ = id
+end
+
+function Actor:getId()
+	return self.id_
 end
 
 function Actor:getStep()
-	return self.attr_:getValue("step")
+	return self.attr_:getValue(BattleCommonDefine.attribute.step)
 end
 
 function Actor:doWithBarrier(barrier)
@@ -23,6 +28,13 @@ function Actor:doWithBarrier(barrier)
 end
 
 function Actor:doWithItem(item)
+	if ItemVO.attribute[item:getId()] ~= 0 then
+		self.attr_:setValue(ItemVO.attribute[item:getId()], ItemVO.value[item:getId()])
+	end
+	if ItemVO.color[item:getId()] ~= 0 then
+		local color = ItemVO.color[item:getId()]
+		self.ani_:setColor(BattleCommonDefine.color[color])
+	end
 	item:disppear()
 	return true
 end

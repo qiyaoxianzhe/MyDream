@@ -5,8 +5,8 @@
 
 local BarrierManager = class("BarrierManager", System)
 
-function BarrierManager:addBarrier(location)
-	local barrier = Barrier.new(location)
+function BarrierManager:addBarrier(id, location)
+	local barrier = Barrier.new(id, location)
 	self:addSysChild(barrier)
 	return barrier
 end

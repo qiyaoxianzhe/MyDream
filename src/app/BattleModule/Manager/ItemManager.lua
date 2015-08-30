@@ -5,8 +5,8 @@
 
 local ItemManager = class("ItemManager", System)
 
-function ItemManager:addItem(location)
-	local item = Item.new(location)
+function ItemManager:addItem(id, location)
+	local item = Item.new(id, location)
 	self:addSysChild(item)
 	return item
 end

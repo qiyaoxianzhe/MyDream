@@ -17,4 +17,8 @@ function ActoAni:onCreate(node)
     self.ani_:runAction(cc.RepeatForever:create(seq))
 end
 
+function ActoAni:setColor(color)
+	self.ani_:setColor(color)
+end
+
 return ActoAni

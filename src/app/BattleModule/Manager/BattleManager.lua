@@ -33,6 +33,11 @@ function BattleManager:getItemManager()
 	return o.itemManager_
 end
 
+function BattleManager:getBuffManager()
+	local o = BattleManager:getInstance()
+	return o.buffManager_
+end
+
 function BattleManager:getCurrentRomm()
 	local o = BattleManager:getInstance()
 	return o.room_
@@ -54,12 +59,16 @@ function BattleManager:onCreate(battleScene)
     self.barrierManager_ = BarrierManager.new()
     self.actorManager_ = ActorManager.new()
     self.itemManager_ = ItemManager.new()
+    self.buffManager_ = BuffManager.new()
     self:addSysChild(self.barrierManager_)
     self:addSysChild(self.actorManager_)
     self:addSysChild(self.itemManager_)
+    self:addSysChild(self.buffManager_)
 	self:initRoomPanel_()
 	self:initRoom_()
     self:initTouch_()
+    self:initUI_()
+    self:initShowdow_()
 end
 
 function BattleManager:isMove()
@@ -71,7 +80,8 @@ function BattleManager:setMove(isMove)
 end
 
 function BattleManager:initRoom_()
-	self.room_ = Room.new(self.roomPanel_)
+	--TODO 设计关卡
+	self.room_ = Room.new(self.roomPanel_, 110001)
 	self:addSysChild(self.room_)
 end
 
@@ -87,6 +97,113 @@ function BattleManager:initTouch_()
 	self.roomPanel_:setTouchEnabled(true)
     self.roomPanel_:registerScriptTouchHandler(handler(self,self.touch_))
 end
+
+function BattleManager:initShowdow_()
+	self.showdow_ = display.newLayer()
+	self.showdow_.cloud = display.newSprite("shadow/cloud.png")
+	self.showdow_.cloud:setPosition(cc.p(display.cx,display.cy))
+	self.showdow_.cloud:setOpacity(0)
+	self.showdow_.cloud:setVisible(false)
+	self.showdow_:addChild(self.showdow_.cloud)
+	self.battleScene_:addChild(self.showdow_)
+end
+
+function BattleManager:closeShowdow_(hasAnimation,callback)
+	self.roomPanel_:setTouchEnabled(false)
+	self.showdow_.cloud:setVisible(true)
+	if hasAnimation then
+		self.showdow_.cloud:runAction(transition.sequence({cc.FadeIn:create(0.5),
+			CCCallFunc:create(function()
+				self.showdow_.cloud:setVisible(true)
+				self.roomPanel_:setTouchEnabled(false)
+				if callback then
+					callback()
+				end
+			end)}))
+	else
+		self.showdow_.cloud:setOpacity(255)
+		self.showdow_.cloud:setVisible(true)
+		self.roomPanel_:setTouchEnabled(false)
+		if callback then
+			callback()
+		end
+	end
+end
+
+function BattleManager:openShowdow_(hasAnimation,callback)
+	self.roomPanel_:setTouchEnabled(false)
+	self.showdow_.cloud:setVisible(true)
+	if hasAnimation then
+		self.showdow_.cloud:runAction(transition.sequence({
+			cc.DelayTime:create(0.5),
+			cc.FadeOut:create(0.5),
+			CCCallFunc:create(function()
+				self.showdow_.cloud:setVisible(false)
+				self.roomPanel_:setTouchEnabled(true)
+				if callback then
+					callback()
+				end
+			end)}))
+	else
+		self.showdow_.cloud:setOpacity(0)
+		self.showdow_.cloud:setVisible(false)
+		self.roomPanel_:setTouchEnabled(true)
+		if callback then
+			callback()
+		end
+	end
+end
+
+-- function BattleManager:initShowdow_()
+-- 	self.showdow_ = display.newLayer()
+-- 	self.showdow_:setContentSize(display.size)
+-- 	self.showdow_.left_ = display.newSprite("shadow/cloud.png")
+-- 	self.showdow_.right_ = display.newSprite("shadow/cloud.png")
+-- 	self.showdow_.left_:setPosition(cc.p(display.left,display.cy))
+-- 	self.showdow_.right_:setPosition(cc.p(display.right,display.cy))
+-- 	self.showdow_:addChild(self.showdow_.left_)
+-- 	self.showdow_:addChild(self.showdow_.right_)
+-- 	self.showdow_:setVisible(false)
+-- 	self.battleScene_:addChild(self.showdow_)
+-- end
+
+-- function BattleManager:closeShowdow_(hasAnimation)
+-- 	self.showdow_:setVisible(true)
+-- 	self.roomPanel_:setTouchEnabled(false)
+-- 	if hasAnimation then
+-- 		self.showdow_.left_:runAction(transition.sequence({cc.MoveTo:create(1, cc.p(display.cx, display.cy)),
+-- 			CCCallFunc:create(function()
+-- 			end)}))
+-- 		self.showdow_.right_:runAction(transition.sequence({cc.MoveTo:create(1, cc.p(display.cx, display.cy)),
+-- 			CCCallFunc:create(function()
+-- 			end)}))
+-- 	else
+-- 		self.showdow_.left_:setPosition(cc.p(display.cx,display.cy))
+-- 		self.showdow_.right_:setPosition(cc.p(display.cx,display.cy))
+-- 	end
+-- end
+
+-- function BattleManager:openShowdow_(hasAnimation)
+-- 	self.showdow_:setVisible(true)
+-- 	self.roomPanel_:setTouchEnabled(false)
+-- 	if hasAnimation then
+-- 		self.showdow_.left_:runAction(transition.sequence({cc.MoveTo:create(1, cc.p(- display.width / 2, display.cy)),
+-- 			CCCallFunc:create(function()
+-- 				self.showdow_:setVisible(false)
+-- 				self.roomPanel_:setTouchEnabled(true)
+-- 			end)}))
+-- 		self.showdow_.right_:runAction(transition.sequence({cc.MoveTo:create(1, cc.p(3 * display.width / 2, display.cy)),
+-- 			CCCallFunc:create(function()
+-- 				self.showdow_:setVisible(false)
+-- 				self.roomPanel_:setTouchEnabled(true)
+-- 			end)}))
+-- 	else
+-- 		self.showdow_.left_:setPosition(cc.p(display.left,display.cy))
+-- 		self.showdow_.right:setPosition(cc.p(display.right,display.cy))
+-- 		self.showdow_:setVisible(false)
+-- 		self.roomPanel_:setTouchEnabled(true)
+-- 	end
+-- end
 
 function BattleManager:touch_(event,x,y)
 	local direction = "ideal"
@@ -125,9 +242,14 @@ function BattleManager:controlDirection(direction)
 end
 
 function BattleManager:initUI_()
+	self.battleUI_ = BattleUI.new("BattleUI",display.size)
+	self.battleScene_:addChild(self.battleUI_:getView())
 end
 
 function BattleManager:beginGame()
+	self:closeShowdow_(false,function()
+		self:openShowdow_(true)
+	end)
 	self.room_:initLocationer()
 end
 

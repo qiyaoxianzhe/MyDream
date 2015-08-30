@@ -17,6 +17,7 @@ ClassImport.BattleActorRoot = ClassImport.BattleRoot.."Actor."
 ClassImport.BattleBarrierRoot = ClassImport.BattleRoot.."Barrier."
 ClassImport.BattleItemRoot = ClassImport.BattleRoot.."Item."
 ClassImport.BattleRoomRoot = ClassImport.BattleRoot.."Room."
+ClassImport.BattleBuffRoot = ClassImport.BattleRoot.."Buff."
 
 ClassImport.define = {
 	"common",
@@ -35,14 +36,17 @@ ClassImport.define = {
 	ClassImport.BattleRoomRoot.."Room",
 	ClassImport.BattleBarrierRoot.."Barrier",
 	ClassImport.BattleBarrierRoot.."BarrierAni",
+	ClassImport.BattleBuffRoot.."Buff",
 	ClassImport.BattleManagerRoot.."BattleManager",
 	ClassImport.BattleManagerRoot.."ItemManager",
 	ClassImport.BattleManagerRoot.."BarrierManager",
 	ClassImport.BattleManagerRoot.."ActorManager",
+	ClassImport.BattleManagerRoot.."BuffManager",
 }
 
 ClassImport.config = {
 	ClassImport.VO.."MapVO",
+	ClassImport.VO.."ItemVO",
 }
 
 function ClassImport.import()

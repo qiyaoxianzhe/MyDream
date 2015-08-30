@@ -8,12 +8,16 @@ ActorAttr.TYPE = "ACTORATTR_TYPE"
 
 function ActorAttr:onCreate()
 	self.config_ = {
-		["step"] = 1
+		[BattleCommonDefine.attribute.step] = 7
 	}
 end
 
-function ActorAttr:getValue(property)
-	return self.config_[property]
+function ActorAttr:getValue(attribute)
+	return self.config_[attribute]
+end
+
+function ActorAttr:setValue(attribute,value)
+	self.config_[attribute] = value
 end
 
 return ActorAttr
