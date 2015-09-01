@@ -96,6 +96,10 @@ function System:getSysChildren()
 	return self.children_
 end
 
+function System:getSysChild(keyName)
+	return self.children_[keyName]
+end
+
 function System:setNode(node)
 	self.node_ = node
 end

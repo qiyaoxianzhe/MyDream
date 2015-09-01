@@ -23,9 +23,24 @@ function BattleManager:getBarrierManager()
 	return o.barrierManager_
 end
 
-function BattleManager:getEnemyManager()
+function BattleManager:getActorManager()
 	local o = BattleManager:getInstance()
-	return o.enemyManager_
+	return o.actorManager_
+end
+
+function BattleManager:getItemManager()
+	local o = BattleManager:getInstance()
+	return o.itemManager_
+end
+
+function BattleManager:getBuffManager()
+	local o = BattleManager:getInstance()
+	return o.buffManager_
+end
+
+function BattleManager:getCurrentRomm()
+	local o = BattleManager:getInstance()
+	return o.room_
 end
 
 function BattleManager:getBattleUI()
@@ -39,25 +54,156 @@ end
 
 function BattleManager:onCreate(battleScene)
     printf("BattleManager:onCreate")
-	self.battleScene_ = battleScene
+    self.battleScene_ = battleScene
+    self.isMove_ = false
+    self.barrierManager_ = BarrierManager.new()
+    self.actorManager_ = ActorManager.new()
+    self.itemManager_ = ItemManager.new()
+    self.buffManager_ = BuffManager.new()
+    self:addSysChild(self.barrierManager_)
+    self:addSysChild(self.actorManager_)
+    self:addSysChild(self.itemManager_)
+    self:addSysChild(self.buffManager_)
 	self:initRoomPanel_()
-    self:initPlay_()
+	self:initRoom_()
     self:initTouch_()
+    self:initUI_()
+    self:initShowdow_()
+end
+
+function BattleManager:isMove()
+	return self.isMove_
+end
+
+function BattleManager:setMove(isMove)
+	self.isMove_ = isMove
+end
+
+function BattleManager:initRoom_()
+	--TODO 设计关卡
+	self.room_ = Room.new(self.roomPanel_, 110001)
+	self:addSysChild(self.room_)
 end
 
 function BattleManager:initRoomPanel_()
-	self.roomPanel_ = display.newLayer()
+	self.roomPanel_ = cc.LayerColor:create(cc.c4b(100, 100, 100, 255),BattleCommonDefine.ROOM_WIDTH,BattleCommonDefine.ROOM_HEIGHT)
     self.battleScene_:addChild(self.roomPanel_)
+    self.roomPanel_:ignoreAnchorPointForPosition(false)
+    self.roomPanel_:setAnchorPoint(cc.p(0.5,0.5))
     self.roomPanel_:setPosition(display.cx,display.cy)
-end
-
-function BattleManager:initPlay_()
 end
 
 function BattleManager:initTouch_()
 	self.roomPanel_:setTouchEnabled(true)
     self.roomPanel_:registerScriptTouchHandler(handler(self,self.touch_))
 end
+
+function BattleManager:initShowdow_()
+	self.showdow_ = display.newLayer()
+	self.showdow_.cloud = display.newSprite("shadow/cloud.png")
+	self.showdow_.cloud:setPosition(cc.p(display.cx,display.cy))
+	self.showdow_.cloud:setOpacity(0)
+	self.showdow_.cloud:setVisible(false)
+	self.showdow_:addChild(self.showdow_.cloud)
+	self.battleScene_:addChild(self.showdow_)
+end
+
+function BattleManager:closeShowdow_(hasAnimation,callback)
+	self.roomPanel_:setTouchEnabled(false)
+	self.showdow_.cloud:setVisible(true)
+	if hasAnimation then
+		self.showdow_.cloud:runAction(transition.sequence({cc.FadeIn:create(0.5),
+			CCCallFunc:create(function()
+				self.showdow_.cloud:setVisible(true)
+				self.roomPanel_:setTouchEnabled(false)
+				if callback then
+					callback()
+				end
+			end)}))
+	else
+		self.showdow_.cloud:setOpacity(255)
+		self.showdow_.cloud:setVisible(true)
+		self.roomPanel_:setTouchEnabled(false)
+		if callback then
+			callback()
+		end
+	end
+end
+
+function BattleManager:openShowdow_(hasAnimation,callback)
+	self.roomPanel_:setTouchEnabled(false)
+	self.showdow_.cloud:setVisible(true)
+	if hasAnimation then
+		self.showdow_.cloud:runAction(transition.sequence({
+			cc.DelayTime:create(0.5),
+			cc.FadeOut:create(0.5),
+			CCCallFunc:create(function()
+				self.showdow_.cloud:setVisible(false)
+				self.roomPanel_:setTouchEnabled(true)
+				if callback then
+					callback()
+				end
+			end)}))
+	else
+		self.showdow_.cloud:setOpacity(0)
+		self.showdow_.cloud:setVisible(false)
+		self.roomPanel_:setTouchEnabled(true)
+		if callback then
+			callback()
+		end
+	end
+end
+
+-- function BattleManager:initShowdow_()
+-- 	self.showdow_ = display.newLayer()
+-- 	self.showdow_:setContentSize(display.size)
+-- 	self.showdow_.left_ = display.newSprite("shadow/cloud.png")
+-- 	self.showdow_.right_ = display.newSprite("shadow/cloud.png")
+-- 	self.showdow_.left_:setPosition(cc.p(display.left,display.cy))
+-- 	self.showdow_.right_:setPosition(cc.p(display.right,display.cy))
+-- 	self.showdow_:addChild(self.showdow_.left_)
+-- 	self.showdow_:addChild(self.showdow_.right_)
+-- 	self.showdow_:setVisible(false)
+-- 	self.battleScene_:addChild(self.showdow_)
+-- end
+
+-- function BattleManager:closeShowdow_(hasAnimation)
+-- 	self.showdow_:setVisible(true)
+-- 	self.roomPanel_:setTouchEnabled(false)
+-- 	if hasAnimation then
+-- 		self.showdow_.left_:runAction(transition.sequence({cc.MoveTo:create(1, cc.p(display.cx, display.cy)),
+-- 			CCCallFunc:create(function()
+-- 			end)}))
+-- 		self.showdow_.right_:runAction(transition.sequence({cc.MoveTo:create(1, cc.p(display.cx, display.cy)),
+-- 			CCCallFunc:create(function()
+-- 			end)}))
+-- 	else
+-- 		self.showdow_.left_:setPosition(cc.p(display.cx,display.cy))
+-- 		self.showdow_.right_:setPosition(cc.p(display.cx,display.cy))
+-- 	end
+-- end
+
+-- function BattleManager:openShowdow_(hasAnimation)
+-- 	self.showdow_:setVisible(true)
+-- 	self.roomPanel_:setTouchEnabled(false)
+-- 	if hasAnimation then
+-- 		self.showdow_.left_:runAction(transition.sequence({cc.MoveTo:create(1, cc.p(- display.width / 2, display.cy)),
+-- 			CCCallFunc:create(function()
+-- 				self.showdow_:setVisible(false)
+-- 				self.roomPanel_:setTouchEnabled(true)
+-- 			end)}))
+-- 		self.showdow_.right_:runAction(transition.sequence({cc.MoveTo:create(1, cc.p(3 * display.width / 2, display.cy)),
+-- 			CCCallFunc:create(function()
+-- 				self.showdow_:setVisible(false)
+-- 				self.roomPanel_:setTouchEnabled(true)
+-- 			end)}))
+-- 	else
+-- 		self.showdow_.left_:setPosition(cc.p(display.left,display.cy))
+-- 		self.showdow_.right:setPosition(cc.p(display.right,display.cy))
+-- 		self.showdow_:setVisible(false)
+-- 		self.roomPanel_:setTouchEnabled(true)
+-- 	end
+-- end
 
 function BattleManager:touch_(event,x,y)
 	local direction = "ideal"
@@ -70,15 +216,15 @@ function BattleManager:touch_(event,x,y)
 		local pos = cc.pSub(self.endPox_,self.beginPox_)
 		if math.abs(pos.x) > math.abs(pos.y) then
 			if pos.x > 0 then
-				direction = "right"
+				direction = BattleCommonDefine.DIRECTION_RIGHT
 			else
-				direction = "left"
+				direction = BattleCommonDefine.DIRECTION_LEFT
 			end
 		else
 			if pos.y > 0 then
-				direction = "up"
+				direction = BattleCommonDefine.DIRECTION_UP
 			else
-				direction = "down"
+				direction = BattleCommonDefine.DIRECTION_DOWN
 			end
 		end
 		self.beginPox_ = cc.p(0,0)
@@ -89,13 +235,22 @@ end
 
 function BattleManager:controlDirection(direction)
 	--todo 增加控制逻辑 
-	printf("direction : %s",direction)
+	printf("direction : %d",direction)
+	if self.room_ and not self.isMove_ then
+		self.room_:controlDirection(direction)
+	end
 end
 
 function BattleManager:initUI_()
+	self.battleUI_ = BattleUI.new("BattleUI",display.size)
+	self.battleScene_:addChild(self.battleUI_:getView())
 end
 
-function BattleManager:beginBattle()
+function BattleManager:beginGame()
+	self:closeShowdow_(false,function()
+		self:openShowdow_(true)
+	end)
+	self.room_:initLocationer()
 end
 
 function BattleManager:onUpdate(t)

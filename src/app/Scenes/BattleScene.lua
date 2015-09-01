@@ -7,7 +7,7 @@ local BattleScene = class("MainScene",function()
 end)
 
 function BattleScene:ctor()
-	printf("BattleScene:ctor:%s",tostring(BattleManager))
+	printf("BattleScene:ctor:%s",tostring(self))
 	--初始化battlemanager
 	BattleManager:clean()
 	self.battleManager_ = BattleManager:getInstance(self)
@@ -18,7 +18,7 @@ end
 
 function BattleScene:onEnter()
 	printf("BattleScene:onEnter")
-	self.battleManager_:beginBattle()
+	self.battleManager_:beginGame()
 end
 
 function BattleScene:onExit()
