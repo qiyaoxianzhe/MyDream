@@ -9,7 +9,7 @@ ClassImport.WidgetRoot = "GUIWidget."
 ClassImport.ModelRoot = "Model."
 ClassImport.UIRoot = "UI."
 ClassImport.Components = "Components."
-ClassImport.BattleModule = "BattleModule."
+ClassImport.GameRoot = "GameModule."
 ClassImport.BattleRoot = "BattleModule."
 ClassImport.VO = "VO."
 ClassImport.BattleManagerRoot = ClassImport.BattleRoot.."Manager."
@@ -26,8 +26,9 @@ ClassImport.define = {
 	ClassImport.Components.."StateMachine",
 	ClassImport.Components.."System",
 	ClassImport.Components.."Locationer",
-	ClassImport.BattleRoot.."BattleCommonDefine",
 	ClassImport.UIRoot.."BattleUI",
+	ClassImport.GameRoot.."GameManager",
+	ClassImport.BattleRoot.."BattleCommonDefine",
 	ClassImport.BattleActorRoot.."Actor",
 	ClassImport.BattleActorRoot.."ActoAni",
 	ClassImport.BattleActorRoot.."ActorAttr",

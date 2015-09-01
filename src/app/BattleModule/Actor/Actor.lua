@@ -28,12 +28,16 @@ function Actor:doWithBarrier(barrier)
 end
 
 function Actor:doWithItem(item)
-	if ItemVO.attribute[item:getId()] ~= 0 then
-		self.attr_:setValue(ItemVO.attribute[item:getId()], ItemVO.value[item:getId()])
-	end
-	if ItemVO.color[item:getId()] ~= 0 then
-		local color = ItemVO.color[item:getId()]
-		self.ani_:setColor(BattleCommonDefine.color[color])
+	if ItemVO.useType[item:getId()] == 1 then
+		if ItemVO.attribute[item:getId()] ~= 0 then
+			self.attr_:setValue(ItemVO.attribute[item:getId()], ItemVO.value[item:getId()])
+		end
+		if ItemVO.color[item:getId()] ~= 0 then
+			local color = ItemVO.color[item:getId()]
+			self.ani_:setColor(BattleCommonDefine.color[color])
+		end
+	elseif ItemVO.useType[item:getId()] == 2 then
+		GameManager:getInstance():addResource(item:getId(), 1)
 	end
 	item:disppear()
 	return true
