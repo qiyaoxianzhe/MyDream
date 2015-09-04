@@ -23,6 +23,7 @@ function GameManager:clean()
 	GLOBAL_VAR.gameManager_ = nil
 end
 
+--131001 转向 131002 复活 131003 钥匙 131004英雄符文
 function GameManager:addResource(resourcsType, resourcsNum)
 	if not self.resource_[resourcsType] then
 		self.resource_[resourcsType] = 0

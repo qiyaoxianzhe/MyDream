@@ -5,8 +5,8 @@
 local BattleCommonDefine = class("BattleCommonDefine")
 
 BattleCommonDefine.BLOCK_SIZE = 50
-BattleCommonDefine.BLOCK_WIDTH = 20
-BattleCommonDefine.BLOCK_HEIGHT = 10
+BattleCommonDefine.BLOCK_WIDTH = 14
+BattleCommonDefine.BLOCK_HEIGHT = 8
 
 BattleCommonDefine.ROOM_WIDTH = BattleCommonDefine.BLOCK_SIZE * BattleCommonDefine.BLOCK_WIDTH
 BattleCommonDefine.ROOM_HEIGHT = BattleCommonDefine.BLOCK_SIZE * BattleCommonDefine.BLOCK_HEIGHT
@@ -24,6 +24,7 @@ BattleCommonDefine.Zorder = {
 
 BattleCommonDefine.attribute = {
 	step = 1,
+	power = 2,
 }
 
 BattleCommonDefine.color = {
