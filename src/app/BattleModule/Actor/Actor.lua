@@ -8,24 +8,50 @@ Actor.TYPE = "ACTOR_TYPE"
 
 function Actor:onCreate(id, power, location)
 	Actor.super.onCreate(self,location)
-	self.ani_ = ActoAni.new(self.node_)
+	self.ani_ = ActorAni.new(self.node_)
 	self:addSysChild(self.ani_)
 	self.attr_ = ActorAttr.new()
 	self:addSysChild(self.attr_)
 	self.id_ = id
+	self.buffs_ = {}
 	self:setValue(BattleCommonDefine.attribute.power, power)
+end
+
+function Actor:addBuff(buff)
+	self.buffs_[#self.buffs_ + 1] = buff
 end
 
 function Actor:getId()
 	return self.id_
 end
 
+function Actor:transTo(location)
+	self.location_.x, self.location_.y = location.x, location.y
+	local x,y = self:locationToPosition(location)
+	self.node_:setPosition(cc.p(x,y))
+	self.ani_:trans()
+	BattleManager:getCurrentRoom():updateBlock_()	
+end
+
 function Actor:doWithBarrier(barrier)
-	local dead = barrier:hit(self)
+	barrier:hit(self)
+	local dead = barrier:isDead()
 	if dead then
 		barrier:disppear()
 	end
 	return false
+end
+
+function Actor:doWithBuff()
+	local canMove = true
+	for i = #self.buffs_, 1, -1 do
+		canMove = canMove and self.buffs_[i]:hit(self)
+		local dead = self.buffs_[i]:isDead()
+		if dead then
+			table.remove(self.buffs_,i)
+		end
+	end
+	return canMove
 end
 
 function Actor:doWithZone(zone)

@@ -10,11 +10,20 @@ BarrierVO.barrierType = {
 	soldier = 1,
 	poison = 2,
 	tension = 3,
-	enchantment = 4,
-	wall = 5,
+	enchantBarrier = 4,
+	enchantStep = 5,
+	enchantZone = 6,
+	wall = 7,
 }
 
-BarrierVO.id = {120001,120002,120003,120004,120005}
+-- 结界类型 清楚指定人数敌人消失 剩余指定步数消失
+BarrierVO.enchatmentType = {
+	barrier = 1,
+    step = 2,
+    zone = 3,
+}
+
+BarrierVO.id = {120001,120002,120003,120004,120005,120006,120007}
 
 BarrierVO.hitCount = {
 	[120001] = 2,
@@ -22,6 +31,8 @@ BarrierVO.hitCount = {
 	[120003] = 2,
 	[120004] = -1,
 	[120005] = -1,
+	[120006] = -1,
+	[120007] = -1,
 }
 
 BarrierVO.type = {
@@ -30,15 +41,19 @@ BarrierVO.type = {
 	[120003] = 3,
 	[120004] = 4,
 	[120005] = 5,
+	[120005] = 6,
+	[120005] = 7,
 }
 
 -- 数值
 BarrierVO.value = {
-	[120001] = 2,
-	[120002] = -1,
-	[120003] = 3,
-	[120004] = -1,
-	[120005] = -1,
+	[120001] = -2,
+	[120002] = 0,
+	[120003] = -3,
+	[120004] = 0,
+	[120005] = 5,
+	[120006] = 5,
+	[120007] = 0,
 }
 
 

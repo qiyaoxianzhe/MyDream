@@ -28,6 +28,16 @@ function ZoneManager:createZone(id, location)
 	return zone
 end
 
+function ZoneManager:findZoneByType(type)
+	local zones = {}
+	for k, v in pairs(self:getSysChildren()) do
+		if v:getType() == type then
+			zones[#zones + 1] = v
+		end
+	end
+	return zones
+end
+
 function ZoneManager:getAllZones()
 	return self:getSysChildren()
 end

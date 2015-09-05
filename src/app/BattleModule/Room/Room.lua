@@ -8,10 +8,10 @@ Room.TYPE = "ROOM_TYPE"
 
 Room.order = {
 	terrain = 1,
-	actor = 2,
-	barrier = 2,
-	item = 2,
-	zone = 3,
+	zone = 2,
+	actor = 3,
+	barrier = 3,
+	item = 3,
 }
 
 function Room:onCreate(roomPanel,id)
@@ -145,6 +145,10 @@ end
 
 function Room:controlDirection(direction)
 	local actor = self:getActor_(1)
+	local canMove = actor:doWithBuff()
+	if not canMove then
+		return
+	end
 	local allStep = actor:getValue(BattleCommonDefine.attribute.step)
 	local location = actor:getLocation()
 	local vectory = cc.p(0,0)
@@ -168,24 +172,19 @@ function Room:controlDirection(direction)
 	if step <= 0 then
 		return
 	end
-	local currentPower = actor:getValue(BattleCommonDefine.attribute.power)
-	actor:setValue(BattleCommonDefine.attribute.power,currentPower - 1)
+	local currentPower = actor:getValue(BattleCommonDefine.attribute.power) - 1
 	if currentPower <= 0 then
 		self:gameOver_()
 	else
+		actor:setValue(BattleCommonDefine.attribute.power,currentPower)
 		actor:move(vectory.x, vectory.y, step)
-		self:updateBlock_()	
+		self:updateBlock_()
 	end
 end
 
 function Room:finish()
 	--TODO
 	print("finish room")
-end
-
-function Room:transition(actor)
-	--TODO
-	print("transition actor")
 end
 
 function Room:gameOver_()

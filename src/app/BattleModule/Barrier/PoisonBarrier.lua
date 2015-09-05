@@ -15,9 +15,7 @@ function PoisonBarrier:getId()
 end
 
 function PoisonBarrier:hit(actor)
-	-- 增加毒属性buff
-	print("PoisonBarrier:hit")
-	PoisonBarrier.super.hit(self,ator)
+	actor:addBuff(PoisonBuff.new(140002))
 end
 
 return PoisonBarrier

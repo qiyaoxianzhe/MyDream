@@ -15,8 +15,7 @@ function PoisonZone:getId()
 end
 
 function PoisonZone:hit(actor)
-	-- TODO 增加毒属性buff
-	print("PoisonZone:hit")
+	actor:addBuff(PoisonBuff.new(140002))
 end
 
 return PoisonZone

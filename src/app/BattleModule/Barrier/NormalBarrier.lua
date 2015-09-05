@@ -16,8 +16,7 @@ end
 
 function NormalBarrier:hit(actor)
 	local currentPower = actor:getValue(BattleCommonDefine.attribute.power)
-	actor:setValue(BattleCommonDefine.attribute.power,currentPower - BarrierVO.value[self:getId()])
-	return NormalBarrier.super.hit(self,ator)
+	actor:setValue(BattleCommonDefine.attribute.power,currentPower + BarrierVO.value[self:getId()])
 end
 
 return NormalBarrier

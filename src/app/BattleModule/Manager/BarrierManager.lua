@@ -11,6 +11,16 @@ function BarrierManager:addBarrier(id, location)
 	return barrier
 end
 
+function BarrierManager:findBarrierByType(type)
+	local barriers = {}
+	for k, v in pairs(self:getSysChildren()) do
+		if v:getType() == type then
+			barriers[#barriers + 1] = v
+		end
+	end
+	return barriers
+end
+
 function BarrierManager:createBarrier(id, location)
 	local barrier = nil
 	if BarrierVO.type[id] == BarrierVO.barrierType.soldier then

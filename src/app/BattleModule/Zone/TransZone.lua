@@ -15,7 +15,14 @@ function TransZone:getId()
 end
 
 function TransZone:hit(actor)
-	BattleManager:getCurrentRoom():transition(actor)
+	local zones = BattleManager:getZoneManager():findZoneByType(TransZone.TYPE)
+	for k,v in pairs(zones) do
+		if actor:getLocation().x ~= v:getLocation().x or actor:getLocation().y ~= v:getLocation().y 
+			and self:getId() == v:getId() then
+			actor:transTo(v:getLocation())
+			break
+		end
+	end
 end
 
 return TransZone

@@ -15,7 +15,7 @@ function FrozenZone:getId()
 end
 
 function FrozenZone:hit(actor)
-	-- TODO 增加冰属性buff
+	actor:addBuff(FrozenBuff.new(140001))
 end
 
 return FrozenZone

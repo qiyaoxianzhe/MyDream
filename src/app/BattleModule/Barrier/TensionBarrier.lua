@@ -16,7 +16,6 @@ end
 
 function TensionBarrier:hit(actor)
 	-- 弹走
-	TensionBarrier.super.hit(self,ator)
 end
 
 return TensionBarrier
