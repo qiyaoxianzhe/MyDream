@@ -33,12 +33,17 @@ function BattleManager:getItemManager()
 	return o.itemManager_
 end
 
+function BattleManager:getZoneManager()
+	local o = BattleManager:getInstance()
+	return o.zoneManager_
+end
+
 function BattleManager:getBuffManager()
 	local o = BattleManager:getInstance()
 	return o.buffManager_
 end
 
-function BattleManager:getCurrentRomm()
+function BattleManager:getCurrentRoom()
 	local o = BattleManager:getInstance()
 	return o.room_
 end
@@ -60,10 +65,12 @@ function BattleManager:onCreate(battleScene)
     self.actorManager_ = ActorManager.new()
     self.itemManager_ = ItemManager.new()
     self.buffManager_ = BuffManager.new()
+    self.zoneManager_ = ZoneManager.new()
     self:addSysChild(self.barrierManager_)
     self:addSysChild(self.actorManager_)
     self:addSysChild(self.itemManager_)
     self:addSysChild(self.buffManager_)
+    self:addSysChild(self.zoneManager_)
 	self:initRoomPanel_()
 	self:initRoom_()
     self:initTouch_()

@@ -5,8 +5,8 @@
 
 local ActorManager = class("ActorManager", System)
 
-function ActorManager:addActor(id, location)
-	local actor = Actor.new(id, location)
+function ActorManager:addActor(id, power, location)
+	local actor = Actor.new(id, power, location)
 	self:addSysChild(actor)
 	return actor
 end

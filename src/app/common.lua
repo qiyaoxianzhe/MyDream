@@ -11,6 +11,11 @@ common.Type = {
 	Barrier = 12,
 	Item = 13,
 	Buff = 14,
+	Zone = 15,
 }
+
+function common.getLocationerType(id)
+	return math.floor(id / 10000)
+end
 
 return common

@@ -8,9 +8,10 @@ Room.TYPE = "ROOM_TYPE"
 
 Room.order = {
 	terrain = 1,
-	actor = 2,
+	zone = 2,
+	actor = 3,
 	barrier = 3,
-	item = 4,
+	item = 3,
 }
 
 function Room:onCreate(roomPanel,id)
@@ -18,7 +19,6 @@ function Room:onCreate(roomPanel,id)
 	self.blocks_ = {}
 	self.actors_ = {}
 	self.roomPanel_ = roomPanel
-	self.currentPower_ = MapVO.power[self.id_]
 end
 
 function Room:getId()
@@ -30,8 +30,8 @@ function Room:initLocationer()
 	self:initBarrier_()
 	self:initItem_()
 	self:initPlayer_()
+	self:initZone_()
 	self:updateBlock_()
-	BattleManager:getBattleUI():setPowerNum(self.currentPower_)
 end
 
 function Room:initTerrain_()
@@ -54,17 +54,22 @@ function Room:updateBlock_()
 	local barriers = BattleManager:getBarrierManager():getAllBarriers()
 	local actors = BattleManager:getActorManager():getAllActors()
 	local items = BattleManager:getItemManager():getAllItems()
+	local zones = BattleManager:getZoneManager():getAllZones()
 	for k,barrier in pairs(barriers) do
 		local location = barrier:getLocation()
-		self.blocks_[location.x.."_"..location.y] = {type = barrier:getType(), name = tostring(barrier)}
+		self.blocks_[location.x.."_"..location.y] = {type = common.getLocationerType(barrier:getId()), name = tostring(barrier)}
 	end
 	for k,actor in pairs(actors) do
 		local location = actor:getLocation()
-		self.blocks_[location.x.."_"..location.y] = {type = actor:getType(), name = tostring(actor)}
+		self.blocks_[location.x.."_"..location.y] = {type = common.getLocationerType(actor:getId()), name = tostring(actor)}
 	end
 	for k,item in pairs(items) do
 		local location = item:getLocation()
-		self.blocks_[location.x.."_"..location.y] = {type = item:getType(), name = tostring(item)}
+		self.blocks_[location.x.."_"..location.y] = {type = common.getLocationerType(item:getId()), name = tostring(item)}
+	end
+	for k,zone in pairs(zones) do
+		local location = zone:getLocation()
+		self.blocks_[location.x.."_"..location.y] = {type = common.getLocationerType(zone:getId()), name = tostring(zone)}
 	end
 end
 
@@ -88,20 +93,39 @@ function Room:initItem_()
 	end
 end
 
-function Room:checkBlock(x,y)
+function Room:initZone_()
+	-- todo 位置信息读表获取
+	local zonesMap = MapVO.zone[self.id_]
+	for i = 1, #zonesMap do
+		local location = cc.p(zonesMap[i].x,zonesMap[i].y) 
+		local zone = BattleManager:getZoneManager():addZone(zonesMap[i].id, location)
+		self.roomPanel_:addChild(zone:getNode(), Room.order.zone)
+	end
+end
+
+function Room:checkRunBlock(x,y)
 	if x > BattleCommonDefine.BLOCK_WIDTH or x < 1 or y > BattleCommonDefine.BLOCK_HEIGHT or y < 1 then
 		return false
 	end
-	local type, id = self.blocks_[x.."_"..y].type, self.blocks_[x.."_"..y].name
+	local type, name = self.blocks_[x.."_"..y].type, self.blocks_[x.."_"..y].name
 	local actor = self:getActor_(1)
-	if type == Barrier.TYPE then
-		local barrier = BattleManager:getBarrierManager():getSysChild(id)
+	if type == common.Type.Barrier then
+		local barrier = BattleManager:getBarrierManager():getSysChild(name)
 		return actor:doWithBarrier(barrier)
-	elseif type == Item.TYPE then
-		local item = BattleManager:getItemManager():getSysChild(id)
+	elseif type == common.Type.Item then
+		local item = BattleManager:getItemManager():getSysChild(name)
 		return actor:doWithItem(item)
 	end
 	return true
+end
+
+function Room:checkStopZone(x,y)
+	local type, name = self.blocks_[x.."_"..y].type, self.blocks_[x.."_"..y].name
+	local actor = self:getActor_(1)
+	if type == common.Type.Zone then
+		local zone = BattleManager:getZoneManager():getSysChild(name)
+		return actor:doWithZone(zone)
+	end
 end
 
 function Room:initPlayer_()
@@ -109,7 +133,7 @@ function Room:initPlayer_()
 	local actorsMap = MapVO.actor[self.id_]
 	for i = 1, #actorsMap do
 		local location = cc.p(actorsMap[i].x,actorsMap[i].y) 
-		local actor = BattleManager:getActorManager():addActor(actorsMap[i].id, location)
+		local actor = BattleManager:getActorManager():addActor(actorsMap[i].id, actorsMap[i].power, location)
 		self.actors_[#self.actors_ + 1] = actor
 		self.roomPanel_:addChild(actor:getNode(), Room.order.actor)
 	end
@@ -121,7 +145,11 @@ end
 
 function Room:controlDirection(direction)
 	local actor = self:getActor_(1)
-	local allStep = actor:getStep()
+	local canMove = actor:doWithBuff()
+	if not canMove then
+		return
+	end
+	local allStep = actor:getValue(BattleCommonDefine.attribute.step)
 	local location = actor:getLocation()
 	local vectory = cc.p(0,0)
 	local step = 0
@@ -135,7 +163,7 @@ function Room:controlDirection(direction)
 		elseif direction == BattleCommonDefine.DIRECTION_DOWN then
 			vectory.y = -1
 		end
-		if self:checkBlock(location.x + vectory.x * (step + 1), location.y + vectory.y * (step + 1)) then
+		if self:checkRunBlock(location.x + vectory.x * (step + 1), location.y + vectory.y * (step + 1)) then
 			step = step + 1
 		else
 			break
@@ -144,15 +172,19 @@ function Room:controlDirection(direction)
 	if step <= 0 then
 		return
 	end
-	self.currentPower_ = self.currentPower_ - 1
-	if self.currentPower_ <= 0 then
+	local currentPower = actor:getValue(BattleCommonDefine.attribute.power) - 1
+	if currentPower <= 0 then
 		self:gameOver_()
 	else
+		actor:setValue(BattleCommonDefine.attribute.power,currentPower)
 		actor:move(vectory.x, vectory.y, step)
-		self:updateBlock_()	
-		print("self.currentPower_",self.currentPower_)
-		BattleManager:getBattleUI():setPowerNum(self.currentPower_)
+		self:updateBlock_()
 	end
+end
+
+function Room:finish()
+	--TODO
+	print("finish room")
 end
 
 function Room:gameOver_()

@@ -9,12 +9,13 @@ ClassImport.WidgetRoot = "GUIWidget."
 ClassImport.ModelRoot = "Model."
 ClassImport.UIRoot = "UI."
 ClassImport.Components = "Components."
-ClassImport.BattleModule = "BattleModule."
+ClassImport.GameRoot = "GameModule."
 ClassImport.BattleRoot = "BattleModule."
 ClassImport.VO = "VO."
 ClassImport.BattleManagerRoot = ClassImport.BattleRoot.."Manager."
 ClassImport.BattleActorRoot = ClassImport.BattleRoot.."Actor."
 ClassImport.BattleBarrierRoot = ClassImport.BattleRoot.."Barrier."
+ClassImport.BattleZoneRoot = ClassImport.BattleRoot.."Zone."
 ClassImport.BattleItemRoot = ClassImport.BattleRoot.."Item."
 ClassImport.BattleRoomRoot = ClassImport.BattleRoot.."Room."
 ClassImport.BattleBuffRoot = ClassImport.BattleRoot.."Buff."
@@ -26,27 +27,47 @@ ClassImport.define = {
 	ClassImport.Components.."StateMachine",
 	ClassImport.Components.."System",
 	ClassImport.Components.."Locationer",
-	ClassImport.BattleRoot.."BattleCommonDefine",
 	ClassImport.UIRoot.."BattleUI",
+	ClassImport.GameRoot.."GameManager",
+	ClassImport.BattleRoot.."BattleCommonDefine",
 	ClassImport.BattleActorRoot.."Actor",
-	ClassImport.BattleActorRoot.."ActoAni",
+	ClassImport.BattleActorRoot.."ActorAni",
 	ClassImport.BattleActorRoot.."ActorAttr",
 	ClassImport.BattleItemRoot.."Item",
 	ClassImport.BattleItemRoot.."ItemAni",
 	ClassImport.BattleRoomRoot.."Room",
 	ClassImport.BattleBarrierRoot.."Barrier",
+	ClassImport.BattleBarrierRoot.."NormalBarrier",
+	ClassImport.BattleBarrierRoot.."TensionBarrier",
+	ClassImport.BattleBarrierRoot.."WallBarrier",
+	ClassImport.BattleBarrierRoot.."ConditionBarrier",
+	ClassImport.BattleBarrierRoot.."PoisonBarrier",
 	ClassImport.BattleBarrierRoot.."BarrierAni",
+	ClassImport.BattleZoneRoot.."Zone",
+	ClassImport.BattleZoneRoot.."PoisonZone",
+	ClassImport.BattleZoneRoot.."FrozenZone",
+	ClassImport.BattleZoneRoot.."TransZone",
+	ClassImport.BattleZoneRoot.."TensionZone",
+	ClassImport.BattleZoneRoot.."NextZone",
+	ClassImport.BattleZoneRoot.."HeroZone",
+	ClassImport.BattleZoneRoot.."ZoneAni",
 	ClassImport.BattleBuffRoot.."Buff",
+	ClassImport.BattleBuffRoot.."FrozenBuff",
+	ClassImport.BattleBuffRoot.."PoisonBuff",
 	ClassImport.BattleManagerRoot.."BattleManager",
 	ClassImport.BattleManagerRoot.."ItemManager",
 	ClassImport.BattleManagerRoot.."BarrierManager",
 	ClassImport.BattleManagerRoot.."ActorManager",
 	ClassImport.BattleManagerRoot.."BuffManager",
+	ClassImport.BattleManagerRoot.."ZoneManager",
 }
 
 ClassImport.config = {
 	ClassImport.VO.."MapVO",
 	ClassImport.VO.."ItemVO",
+	ClassImport.VO.."BarrierVO",
+	ClassImport.VO.."ZoneVO",
+	ClassImport.VO.."BuffVO",
 }
 
 function ClassImport.import()

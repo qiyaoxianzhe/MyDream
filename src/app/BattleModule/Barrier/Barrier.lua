@@ -11,10 +11,32 @@ function Barrier:onCreate(id, location)
 	self.ani_ = BarrierAni.new(self.node_)
 	self:addSysChild(self.ani_)
 	self.id_ = id
+	self.hitCount_ = BarrierVO.hitCount[id]
 end
 
 function Barrier:getId()
 	return self.id_
 end
+
+function Barrier:isDead()
+	local dead = false
+	if self.hitCount_ ~= -1 then
+		self.hitCount_ = self.hitCount_ - 1
+		if self.hitCount_ <= 0 then
+			dead = true
+		end
+	end
+	return dead
+end
+
+function Barrier:disppear()
+	self:removeFromSysParent()
+	BattleManager:getCurrentRoom():updateBlock_()	
+end
+
+function Barrier:onDeAttached()
+	self.ani_:disppear()
+end
+
 
 return Barrier
