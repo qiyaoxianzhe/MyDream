@@ -17,7 +17,8 @@ end
 function TensionZone:hit(actor)
 	local barriers = BattleManager:getBarrierManager():findBarrierByType(ConditionBarrier.TYPE)
 	for k,v in pairs(barriers) do
-		if BarrierVO.type[v:getId()] == BarrierVO.barrierType.enchantZone then
+		if BarrierVO.type[v:getId()] == BarrierVO.barrierType.enchantZone 
+			and self.id_ == BarrierVO.value[v:getId()] then
 			v:open()
 		end
 	end

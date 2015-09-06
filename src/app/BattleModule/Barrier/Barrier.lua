@@ -29,6 +29,9 @@ function Barrier:isDead()
 	return dead
 end
 
+function Barrier:hit(actor)
+end
+
 function Barrier:disppear()
 	self:removeFromSysParent()
 	BattleManager:getCurrentRoom():updateBlock_()	

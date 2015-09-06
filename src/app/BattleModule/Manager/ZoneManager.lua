@@ -23,7 +23,9 @@ function ZoneManager:createZone(id, location)
 	elseif ZoneVO.type[id] == ZoneVO.zoneType.trans then
 		zone = TransZone.new(id, location)
 	elseif ZoneVO.type[id] == ZoneVO.zoneType.exit then
-		zone = NextZone.new(id, location)
+		zone = ExitZone.new(id, location)
+	elseif ZoneVO.type[id] == ZoneVO.zoneType.Tension then
+		zone = TensionZone.new(id, location)
 	end
 	return zone
 end

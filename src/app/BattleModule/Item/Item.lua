@@ -18,11 +18,12 @@ function Item:getId()
 end
 
 function Item:disppear()
-	self.ani_:disppear()
+	self:removeFromSysParent()
+	BattleManager:getCurrentRoom():updateBlock_()	
 end
 
 function Item:onDeAttached()
-	self.node_:removeFromParent()
+	self.ani_:disppear()
 end
 
 return Item

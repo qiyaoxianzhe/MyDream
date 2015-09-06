@@ -48,7 +48,7 @@ ClassImport.define = {
 	ClassImport.BattleZoneRoot.."FrozenZone",
 	ClassImport.BattleZoneRoot.."TransZone",
 	ClassImport.BattleZoneRoot.."TensionZone",
-	ClassImport.BattleZoneRoot.."NextZone",
+	ClassImport.BattleZoneRoot.."ExitZone",
 	ClassImport.BattleZoneRoot.."HeroZone",
 	ClassImport.BattleZoneRoot.."ZoneAni",
 	ClassImport.BattleBuffRoot.."Buff",

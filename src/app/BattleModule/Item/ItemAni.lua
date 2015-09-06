@@ -16,7 +16,7 @@ function ItemAni:disppear()
 	local seq = transition.sequence({
 		cc.Spawn:create(cc.MoveBy:create(0.5, cc.p(0,30)), cc.FadeOut:create(0.5)),
 		CCCallFunc:create(function()
-			self:getSysParent():removeFromSysParent()
+			self.node_:removeFromParent()
 		end),
 	})
 	self.ani_:runAction(seq)

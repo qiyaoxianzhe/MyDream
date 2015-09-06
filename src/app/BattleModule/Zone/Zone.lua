@@ -13,7 +13,7 @@ function Zone:onCreate(id, location)
 	self.id_ = id
 end
 
-function NormalBarrier:hit(actor)
+function Zone:hit(actor)
 end
 
 function Zone:getId()

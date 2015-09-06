@@ -91,6 +91,7 @@ function Actor:move(x,y,step)
 		CCCallFunc:create(function()
 			self.ani_:ideal()
 			BattleManager:getCurrentRoom():checkStopZone(self.location_.x, self.location_.y)
+			BattleManager:getBarrierManager():checkTension(self:getValue(BattleCommonDefine.attribute.power))
 			BattleManager:getInstance():setMove(false)
 		end),
 	})

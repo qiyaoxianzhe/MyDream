@@ -170,6 +170,7 @@ function Room:controlDirection(direction)
 		end
 	end
 	if step <= 0 then
+		BattleManager:getBarrierManager():checkTension(actor:getValue(BattleCommonDefine.attribute.power))
 		return
 	end
 	local currentPower = actor:getValue(BattleCommonDefine.attribute.power) - 1
