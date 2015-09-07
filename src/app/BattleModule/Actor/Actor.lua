@@ -18,7 +18,9 @@ function Actor:onCreate(id, power, location)
 end
 
 function Actor:addBuff(buff)
-	self.buffs_[#self.buffs_ + 1] = buff
+	if self:getStatus() ~= ActorAttr.status.bati then
+		self.buffs_[#self.buffs_ + 1] = buff
+	end
 end
 
 function Actor:getId()
@@ -36,7 +38,7 @@ end
 function Actor:doWithBarrier(barrier)
 	barrier:hit(self)
 	local dead = barrier:isDead()
-	if dead then
+	if dead or self:getStatus() == ActorAttr.status.qiangxi then
 		barrier:disppear()
 	end
 	return false

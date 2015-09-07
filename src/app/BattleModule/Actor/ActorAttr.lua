@@ -8,13 +8,14 @@ ActorAttr.TYPE = "ACTORATTR_TYPE"
 
 --人物状态，不可叠加
 
---霸体，强袭，万象，神行，圣洁
+--霸体，强袭，万象，神行，奇智
 ActorAttr.status = {
-	bati = 1,
-	qiangxi = 2,
-	wangxiang = 3,
-	shengxing = 4,
-	shengjie = 5,
+	none = 1,
+	bati = 2,
+	qiangxi = 3,
+	wangxiang = 4,
+	shengxing = 5,
+	shengjie = 6,
 }
 
 function ActorAttr:setStatus(status)
@@ -27,7 +28,7 @@ end
 
 
 function ActorAttr:onCreate()
-	self.status_ = 0
+	self.status_ = ActorAttr.status.wangxiang
 	self.config_ = {
 		[BattleCommonDefine.attribute.step] = 20,
 		[BattleCommonDefine.attribute.power] = 20,

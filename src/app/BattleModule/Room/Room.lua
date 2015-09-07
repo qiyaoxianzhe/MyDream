@@ -122,9 +122,31 @@ end
 function Room:checkStopZone(x,y)
 	local type, name = self.blocks_[x.."_"..y].type, self.blocks_[x.."_"..y].name
 	local actor = self:getActor_(1)
+	if actor:getStatus() == ActorAttr.status.wangxiang then
+		local area = {
+			{x = x + 1, y = y},
+			{x = x - 1, y = y},
+			{x = x, y = y + 1},
+			{x = x, y = y - 1},
+			{x = x + 1, y = y + 1},
+			{x = x + 1, y = y - 1},
+			{x = x - 1, y = y + 1},
+			{x = x - 1, y = y - 1},
+		}
+		for i = 1, #area do
+			if self.blocks_[area[i].x.."_"..area[i].y] then
+				local type, name = self.blocks_[area[i].x.."_"..area[i].y].type, self.blocks_[area[i].x.."_"..area[i].y].name
+				if type == common.Type.Item then
+					local item = BattleManager:getItemManager():getSysChild(name)
+					actor:doWithItem(item)
+				end
+			end
+		end
+	end
+
 	if type == common.Type.Zone then
 		local zone = BattleManager:getZoneManager():getSysChild(name)
-		return actor:doWithZone(zone)
+		actor:doWithZone(zone)
 	end
 end
 
@@ -173,7 +195,11 @@ function Room:controlDirection(direction)
 		BattleManager:getBarrierManager():checkTension(actor:getValue(BattleCommonDefine.attribute.power))
 		return
 	end
-	local currentPower = actor:getValue(BattleCommonDefine.attribute.power) - 1
+	local power = 1
+	if actor:getStatus() == ActorAttr.status.shengxing then
+		power = 0.5
+	end
+	local currentPower = actor:getValue(BattleCommonDefine.attribute.power) - power
 	if currentPower <= 0 then
 		self:gameOver_()
 	else

@@ -10,7 +10,7 @@ function BattleUI:ctor(name,size)
 end
 
 function BattleUI:setPowerNum(num)
-	self.Text_1:setString("剩余行动力："..num)
+	self.Text_1:setString("剩余行动力："..math.ceil(num))
 end
 
 function BattleUI:viewOnEnter()
