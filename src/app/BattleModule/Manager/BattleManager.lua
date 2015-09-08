@@ -213,7 +213,7 @@ end
 -- end
 
 function BattleManager:touch_(event,x,y)
-	local direction = "ideal"
+	local direction = nil
 	if event == "began" then
 		self.beginPox_ = cc.p(x,y)
 		return true			
@@ -221,30 +221,21 @@ function BattleManager:touch_(event,x,y)
 	elseif event == "ended" then
 		self.endPox_ = cc.p(x,y)
 		local pos = cc.pSub(self.endPox_,self.beginPox_)
-		if math.abs(pos.x) > math.abs(pos.y) then
-			if pos.x > 0 then
-				direction = BattleCommonDefine.DIRECTION_RIGHT
-			else
-				direction = BattleCommonDefine.DIRECTION_LEFT
-			end
-		else
-			if pos.y > 0 then
-				direction = BattleCommonDefine.DIRECTION_UP
-			else
-				direction = BattleCommonDefine.DIRECTION_DOWN
-			end
+		local angle = math.deg(cc.pToAngleSelf(pos))
+		if angle < 0 then
+			angle = angle + 360
 		end
 		self.beginPox_ = cc.p(0,0)
 		self.endPox_ = cc.p(0,0)
-		self:controlDirection(direction)
+		self:controlDirection(angle)
 	end
 end
 
-function BattleManager:controlDirection(direction)
+function BattleManager:controlDirection(angle)
 	--todo 增加控制逻辑 
-	printf("direction : %d",direction)
+	printf("angle : %d",angle)
 	if self.room_ and not self.isMove_ then
-		self.room_:controlDirection(direction)
+		self.room_:controlDirection(angle)
 	end
 end
 

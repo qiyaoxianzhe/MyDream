@@ -165,7 +165,43 @@ function Room:getActor_(index)
 	return self.actors_[index or 1]
 end
 
-function Room:controlDirection(direction)
+function Room:calulatDirection8(angle,vectory)
+	if angle < 23 or angle >= 337 then
+		vectory.x = 1
+	elseif angle < 68 and angle >= 23 then
+		vectory.x = 1
+		vectory.y = 1
+	elseif angle < 113 and angle >= 68 then
+		vectory.y = 1
+	elseif angle < 158 and angle >= 113 then
+		vectory.x = -1
+		vectory.y = 1
+	elseif angle < 203 and angle >= 158 then
+		vectory.x = -1
+	elseif angle < 248 and angle >= 203 then
+		vectory.x = -1
+		vectory.y = -1
+	elseif angle < 293 and angle >= 248 then
+		vectory.y = -1
+	elseif angle < 337 and angle >= 293 then
+		vectory.x = 1
+		vectory.y = -1
+	end
+end
+
+function Room:calulatDirection4(angle,vectory)
+	if angle < 45 or angle >= 315 then
+		vectory.x = 1
+	elseif angle < 135 and angle >= 45 then
+		vectory.y = 1
+	elseif angle < 225 and angle >= 135 then
+		vectory.x = -1
+	elseif angle < 315 and angle >= 225 then
+		vectory.y = -1
+	end
+end
+
+function Room:controlDirection(angle)
 	local actor = self:getActor_(1)
 	local canMove = actor:doWithBuff()
 	if not canMove then
@@ -176,14 +212,10 @@ function Room:controlDirection(direction)
 	local vectory = cc.p(0,0)
 	local step = 0
 	for i = 1,allStep do
-		if direction == BattleCommonDefine.DIRECTION_LEFT then
-			vectory.x = -1
-		elseif direction == BattleCommonDefine.DIRECTION_RIGHT then
-			vectory.x = 1
-		elseif direction == BattleCommonDefine.DIRECTION_UP then
-			vectory.y = 1
-		elseif direction == BattleCommonDefine.DIRECTION_DOWN then
-			vectory.y = -1
+		if actor:getStatus() == ActorAttr.status.qizhi then
+			self:calulatDirection8(angle,vectory)
+		else
+			self:calulatDirection4(angle,vectory)
 		end
 		if self:checkRunBlock(location.x + vectory.x * (step + 1), location.y + vectory.y * (step + 1)) then
 			step = step + 1

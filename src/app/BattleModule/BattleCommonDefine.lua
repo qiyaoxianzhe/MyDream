@@ -11,11 +11,6 @@ BattleCommonDefine.BLOCK_HEIGHT = 8
 BattleCommonDefine.ROOM_WIDTH = BattleCommonDefine.BLOCK_SIZE * BattleCommonDefine.BLOCK_WIDTH
 BattleCommonDefine.ROOM_HEIGHT = BattleCommonDefine.BLOCK_SIZE * BattleCommonDefine.BLOCK_HEIGHT
 
-BattleCommonDefine.DIRECTION_LEFT = 1
-BattleCommonDefine.DIRECTION_RIGHT = 2
-BattleCommonDefine.DIRECTION_UP = 3
-BattleCommonDefine.DIRECTION_DOWN = 4
-
 BattleCommonDefine.Zorder = {
 	Room = 1,
 	UI = 9,

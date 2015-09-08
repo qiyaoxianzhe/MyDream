@@ -15,7 +15,7 @@ ActorAttr.status = {
 	qiangxi = 3,
 	wangxiang = 4,
 	shengxing = 5,
-	shengjie = 6,
+	qizhi = 6,
 }
 
 function ActorAttr:setStatus(status)
@@ -28,7 +28,7 @@ end
 
 
 function ActorAttr:onCreate()
-	self.status_ = ActorAttr.status.wangxiang
+	self.status_ = ActorAttr.status.none
 	self.config_ = {
 		[BattleCommonDefine.attribute.step] = 20,
 		[BattleCommonDefine.attribute.power] = 20,
