@@ -13,6 +13,10 @@ function BattleUI:setPowerNum(num)
 	self.Text_1:setString("剩余行动力："..math.ceil(num))
 end
 
+function BattleUI:setStatusName(status)
+	self.Text_2:setString("当前状态："..ActorAttr.statusName[status])
+end
+
 function BattleUI:showUI(isVisible)
 	self:getView():setVisible(isVisible)
 end

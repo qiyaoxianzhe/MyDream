@@ -123,7 +123,7 @@ end
 function Room:checkStopZone(x,y)
 	local type, name = self.blocks_[x.."_"..y].type, self.blocks_[x.."_"..y].name
 	local actor = self:getActor_(1)
-	if actor:getStatus() == ActorAttr.status.wangxiang then
+	if actor:getStatus() == ActorAttr.status.wanxiang then
 		local area = {
 			{x = x + 1, y = y},
 			{x = x - 1, y = y},
@@ -204,6 +204,7 @@ end
 
 function Room:controlDirection(angle)
 	local actor = self:getActor_(1)
+	actor:doWithStatus()
 	local canMove = actor:doWithBuff()
 	if not canMove then
 		return
@@ -213,7 +214,7 @@ function Room:controlDirection(angle)
 	local vectory = cc.p(0,0)
 	local step = 0
 	for i = 1,allStep do
-		if actor:getStatus() == ActorAttr.status.qizhi then
+		if actor:getStatus() == ActorAttr.status.tianqi then
 			self:calulatDirection8(angle,vectory)
 		else
 			self:calulatDirection4(angle,vectory)
@@ -229,7 +230,7 @@ function Room:controlDirection(angle)
 		return
 	end
 	local power = 1
-	if actor:getStatus() == ActorAttr.status.shengxing then
+	if actor:getStatus() == ActorAttr.status.shenxing then
 		power = 0.5
 	end
 	local currentPower = actor:getValue(BattleCommonDefine.attribute.power) - power

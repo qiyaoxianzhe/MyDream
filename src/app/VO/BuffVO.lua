@@ -30,5 +30,10 @@ BuffVO.lastTime = {
 	[140002] = 2,
 }
 
+BuffVO.color = {
+	[140001] = 5,
+	[140002] = 3,
+}
+
 
 return BuffVO

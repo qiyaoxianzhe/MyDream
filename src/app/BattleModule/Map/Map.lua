@@ -11,6 +11,7 @@ function Map:onCreate(mapPanel,id)
 	self.id_ = id
 	self.actorLocation_ = cc.p(0,0)
 	self.roomIds_ = {}
+	self.roomKeys_ = {}
 end
 
 function Map:getId()
@@ -44,6 +45,7 @@ function Map:initRoom_()
 		self.mapPanel_:addChild(room)
 		room:setPosition(cc.p(x,y))
 		self.roomIds_[MapVO.room[self.id_][i].x.."_"..MapVO.room[self.id_][i].y] = MapVO.room[self.id_][i].id
+		self.roomKeys_[MapVO.room[self.id_][i].x.."_"..MapVO.room[self.id_][i].y] = MapVO.room[self.id_][i].key
 	end
 end
 
@@ -81,6 +83,10 @@ function Map:controlDirection(angle)
 	local x = math.max(math.min(self.actorLocation_.x + vectory.x,6),1)
 	local y = math.max(math.min(self.actorLocation_.y + vectory.y,3),1)
 	if not self.roomIds_[x.."_"..y] then
+		return
+	end
+	local key = GameManager:getInstance():getResource(130003)
+	if key < self.roomKeys_[x.."_"..y] then
 		return
 	end
 	if x == self.actorLocation_.x and y == self.actorLocation_.y then

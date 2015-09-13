@@ -20,6 +20,7 @@ end
 function Actor:addBuff(buff)
 	if self:getStatus() ~= ActorAttr.status.bati then
 		self.buffs_[#self.buffs_ + 1] = buff
+		self.ani_:setColor(BuffVO.color[buff:getId()])
 	end
 end
 
@@ -46,13 +47,17 @@ end
 
 function Actor:doWithBuff()
 	local canMove = true
+	local color = 7
 	for i = #self.buffs_, 1, -1 do
 		canMove = canMove and self.buffs_[i]:hit(self)
 		local dead = self.buffs_[i]:isDead()
 		if dead then
 			table.remove(self.buffs_,i)
+		else
+			color = BuffVO.color[self.buffs_[i]:getId()]
 		end
 	end
+	self.ani_:setColor(color)
 	return canMove
 end
 
@@ -66,8 +71,20 @@ function Actor:doWithItem(item)
 	return true
 end
 
+function Actor:doWithStatus()
+	local runes = GameManager:getInstance():getResource(130002)
+	if runes <= 0 then
+		self:setStatus(ActorAttr.status.none)
+	else
+		runes = runes - 1
+	end
+end
+
 function Actor:setValue(attribute, value)
 	self.attr_:setValue(attribute, value)
+	if BattleCommonDefine.attribute.power == attribute then
+		BattleManager:getBattleUI():setPowerNum(value)
+	end
 end
 
 function Actor:getValue(attribute)
@@ -76,6 +93,8 @@ end
 
 function Actor:setStatus(status)
 	self.attr_:setStatus(status)
+	BattleManager:getBattleUI():setStatusName(status)
+	self.ani_:setParticle(status)
 end
 
 function Actor:getStatus()

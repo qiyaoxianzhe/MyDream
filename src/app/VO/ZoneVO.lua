@@ -5,10 +5,10 @@
 
 local ZoneVO = {}
 
--- 毒，冰，英雄剑士，英雄战士，英雄法师，英雄游侠，英雄圣骑，传送，出口,结界开关
+-- 冰，毒，英雄剑士，英雄战士，英雄法师，英雄游侠，英雄圣骑，传送，出口,结界开关
 ZoneVO.zoneType = {
-	poison = 1,
-	fronzen = 2,
+	fronzen = 1,
+	poison = 2,
 	saber = 3,
 	berserker = 4,
 	caster = 5,

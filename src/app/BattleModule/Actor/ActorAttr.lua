@@ -13,9 +13,18 @@ ActorAttr.status = {
 	none = 1,
 	bati = 2,
 	qiangxi = 3,
-	wangxiang = 4,
-	shengxing = 5,
-	qizhi = 6,
+	wanxiang = 4,
+	shenxing = 5,
+	tianqi = 6,
+}
+
+ActorAttr.statusName = {
+	[1] = "普通",
+	[2] = "霸体",
+	[3] = "强袭",
+	[4] = "万象",
+	[5] = "神行",
+	[6] = "天启",
 }
 
 function ActorAttr:setStatus(status)
@@ -41,9 +50,6 @@ end
 
 function ActorAttr:setValue(attribute,value)
 	self.config_[attribute] = value
-	if BattleCommonDefine.attribute.power == attribute then
-		BattleManager:getBattleUI():setPowerNum(value)
-	end
 end
 
 return ActorAttr

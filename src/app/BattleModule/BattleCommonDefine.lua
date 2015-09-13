@@ -33,6 +33,7 @@ BattleCommonDefine.color = {
 	[4] = cc.c3b(0,255,255),
 	[5] = cc.c3b(0,0,255),
 	[6] = cc.c3b(255,0,255),
+	[7] = cc.c3b(255,255,255),
 }
 
 return BattleCommonDefine
