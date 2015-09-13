@@ -30,6 +30,7 @@ ClassImport.define = {
 	ClassImport.Components.."Locationer",
 	ClassImport.UIRoot.."BattleUI",
 	ClassImport.GameRoot.."GameManager",
+	ClassImport.GameRoot.."MusicManager",
 	ClassImport.BattleRoot.."BattleCommonDefine",
 	ClassImport.BattleActorRoot.."Actor",
 	ClassImport.BattleActorRoot.."ActorAni",

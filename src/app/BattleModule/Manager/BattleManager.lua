@@ -301,6 +301,7 @@ end
 function BattleManager:beginGame()
 	self:clearRoom()
 	self:enterMap(160001)
+	MusicManager:getInstance():playAudio("music/1.mp3")
 end
 
 function BattleManager:onUpdate(t)
