@@ -13,6 +13,10 @@ function BattleUI:setPowerNum(num)
 	self.Text_1:setString("剩余行动力："..math.ceil(num))
 end
 
+function BattleUI:showUI(isVisible)
+	self:getView():setVisible(isVisible)
+end
+
 function BattleUI:viewOnEnter()
 end
 

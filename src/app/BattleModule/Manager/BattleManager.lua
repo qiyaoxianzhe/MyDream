@@ -61,6 +61,7 @@ function BattleManager:onCreate(battleScene)
     printf("BattleManager:onCreate")
     self.battleScene_ = battleScene
     self.isMove_ = false
+    self.status_ = BattleCommonDefine.MapStatus
     self.barrierManager_ = BarrierManager.new()
     self.actorManager_ = ActorManager.new()
     self.itemManager_ = ItemManager.new()
@@ -72,6 +73,8 @@ function BattleManager:onCreate(battleScene)
     self:addSysChild(self.buffManager_)
     self:addSysChild(self.zoneManager_)
 	self:initRoomPanel_()
+	self:initMapPanel_()
+	self:initMap_()
 	self:initRoom_()
     self:initTouch_()
     self:initUI_()
@@ -87,9 +90,13 @@ function BattleManager:setMove(isMove)
 end
 
 function BattleManager:initRoom_()
-	--TODO 设计关卡
 	self.room_ = Room.new(self.roomPanel_, 110001)
 	self:addSysChild(self.room_)
+end
+
+function BattleManager:initMap_()
+	self.map_ = Map.new(self.mapPanel_, 160001)
+	self:addSysChild(self.map_)
 end
 
 function BattleManager:initRoomPanel_()
@@ -100,9 +107,19 @@ function BattleManager:initRoomPanel_()
     self.roomPanel_:setPosition(display.cx,display.cy)
 end
 
+function BattleManager:initMapPanel_()
+	self.mapPanel_ = cc.LayerColor:create(cc.c4b(100, 100, 100, 255),display.width,display.height)
+    self.battleScene_:addChild(self.mapPanel_)
+    self.mapPanel_:ignoreAnchorPointForPosition(false)
+    self.mapPanel_:setAnchorPoint(cc.p(0.5,0.5))
+    self.mapPanel_:setPosition(display.cx,display.cy)
+end
+
 function BattleManager:initTouch_()
 	self.roomPanel_:setTouchEnabled(true)
     self.roomPanel_:registerScriptTouchHandler(handler(self,self.touch_))
+    self.mapPanel_:setTouchEnabled(true)
+    self.mapPanel_:registerScriptTouchHandler(handler(self,self.touch_))
 end
 
 function BattleManager:initShowdow_()
@@ -232,11 +249,48 @@ function BattleManager:touch_(event,x,y)
 end
 
 function BattleManager:controlDirection(angle)
-	--todo 增加控制逻辑 
-	printf("angle : %d",angle)
-	if self.room_ and not self.isMove_ then
-		self.room_:controlDirection(angle)
+	if self.status_ ==  BattleCommonDefine.RoomStatus then
+		if self.room_ and not self.isMove_ then
+			self.room_:controlDirection(angle)
+		end
+	elseif self.status_ == BattleCommonDefine.MapStatus then
+		if self.map_ then
+			self.map_:controlDirection(angle)
+		end
 	end
+end
+
+function BattleManager:clearRoom()
+	self.barrierManager_:removeAllSysChild()
+    self.actorManager_:removeAllSysChild()
+    self.itemManager_:removeAllSysChild()
+    self.buffManager_:removeAllSysChild()
+    self.zoneManager_:removeAllSysChild()
+    self.roomPanel_:setVisible(false)
+end
+
+function BattleManager:clearMap()
+    self.mapPanel_:setVisible(false)
+end
+
+function BattleManager:enterRoom(id)
+	self:closeShowdow_(false,function()
+		self:openShowdow_(true)
+	end)
+	self.status_ = BattleCommonDefine.RoomStatus
+	self.roomPanel_:setVisible(true)
+	self.room_:initLocationer(id)
+	self:getBattleUI():showUI(true)
+end
+
+function BattleManager:enterMap(id)
+	self:closeShowdow_(false,function()
+		self:openShowdow_(true)
+	end)
+	self.status_ = BattleCommonDefine.MapStatus
+	self.mapPanel_:setVisible(true)
+	self.map_:initMap(id)
+	self:getBattleUI():showUI(false)
 end
 
 function BattleManager:initUI_()
@@ -245,10 +299,8 @@ function BattleManager:initUI_()
 end
 
 function BattleManager:beginGame()
-	self:closeShowdow_(false,function()
-		self:openShowdow_(true)
-	end)
-	self.room_:initLocationer()
+	self:clearRoom()
+	self:enterMap(160001)
 end
 
 function BattleManager:onUpdate(t)

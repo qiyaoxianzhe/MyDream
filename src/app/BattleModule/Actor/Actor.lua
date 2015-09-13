@@ -85,11 +85,10 @@ end
 
 function Actor:move(x,y,step)
 	BattleManager:getInstance():setMove(true)
-	local offset = 5
 	self.location_.x, self.location_.y = self.location_.x + x * step, self.location_.y + y * step
 	local posX, posY = self:locationToPosition(cc.p(self.location_.x,self.location_.y))
 	local seq = transition.sequence({
-		cc.EaseElasticOut:create(cc.MoveTo:create(0.2 * step, cc.p(posX + x, posY + y)),0.2 * step),
+		cc.MoveTo:create(0.2 * step, cc.p(posX + x, posY + y)),
 		CCCallFunc:create(function()
 			self.ani_:ideal()
 			BattleManager:getCurrentRoom():checkStopZone(self.location_.x, self.location_.y)
@@ -99,6 +98,10 @@ function Actor:move(x,y,step)
 	})
 	self.node_:runAction(seq)
 	self.ani_:run()
+end
+
+function Actor:onDeAttached()
+	self.node_:removeFromParent()
 end
 
 return Actor

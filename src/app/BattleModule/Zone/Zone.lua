@@ -20,4 +20,8 @@ function Zone:getId()
 	return self.id_
 end
 
+function Zone:onDeAttached()
+	self.node_:removeFromParent()
+end
+
 return Zone

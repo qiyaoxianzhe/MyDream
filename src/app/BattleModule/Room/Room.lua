@@ -25,7 +25,8 @@ function Room:getId()
 	return self.id_
 end
 
-function Room:initLocationer()
+function Room:initLocationer(id)
+	self.id_ = id
 	self:initTerrain_()
 	self:initBarrier_()
 	self:initItem_()
@@ -35,7 +36,7 @@ function Room:initLocationer()
 end
 
 function Room:initTerrain_()
-	local terriain = display.newSprite(MapVO.terrain[self.id_])
+	local terriain = display.newSprite(RoomVO.terrain[self.id_])
 	self.roomPanel_:addChild(terriain, Room.order.terrain)
 	local size = self.roomPanel_:getContentSize()
 	terriain:setPosition(cc.p(size.width / 2, size.height / 2))
@@ -75,7 +76,7 @@ end
 
 function Room:initBarrier_()
 	-- todo 位置信息读表获取
-	local barriersMap = MapVO.barrier[self.id_]
+	local barriersMap = RoomVO.barrier[self.id_]
 	for i = 1, #barriersMap do
 		local location = cc.p(barriersMap[i].x,barriersMap[i].y) 
 		local barrier = BattleManager:getBarrierManager():addBarrier(barriersMap[i].id, location)
@@ -85,7 +86,7 @@ end
 
 function Room:initItem_()
 	-- todo 位置信息读表获取
-	local itemsMap = MapVO.item[self.id_]
+	local itemsMap = RoomVO.item[self.id_]
 	for i = 1, #itemsMap do
 		local location = cc.p(itemsMap[i].x,itemsMap[i].y) 
 		local item = BattleManager:getItemManager():addItem(itemsMap[i].id, location)
@@ -95,7 +96,7 @@ end
 
 function Room:initZone_()
 	-- todo 位置信息读表获取
-	local zonesMap = MapVO.zone[self.id_]
+	local zonesMap = RoomVO.zone[self.id_]
 	for i = 1, #zonesMap do
 		local location = cc.p(zonesMap[i].x,zonesMap[i].y) 
 		local zone = BattleManager:getZoneManager():addZone(zonesMap[i].id, location)
@@ -152,7 +153,7 @@ end
 
 function Room:initPlayer_()
 	-- todo 位置信息读表获取
-	local actorsMap = MapVO.actor[self.id_]
+	local actorsMap = RoomVO.actor[self.id_]
 	for i = 1, #actorsMap do
 		local location = cc.p(actorsMap[i].x,actorsMap[i].y) 
 		local actor = BattleManager:getActorManager():addActor(actorsMap[i].id, actorsMap[i].power, location)

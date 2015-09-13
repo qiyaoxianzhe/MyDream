@@ -4,12 +4,16 @@
 --
 local BattleCommonDefine = class("BattleCommonDefine")
 
+BattleCommonDefine.MAP_SIZE = 200
 BattleCommonDefine.BLOCK_SIZE = 50
 BattleCommonDefine.BLOCK_WIDTH = 14
 BattleCommonDefine.BLOCK_HEIGHT = 8
 
 BattleCommonDefine.ROOM_WIDTH = BattleCommonDefine.BLOCK_SIZE * BattleCommonDefine.BLOCK_WIDTH
 BattleCommonDefine.ROOM_HEIGHT = BattleCommonDefine.BLOCK_SIZE * BattleCommonDefine.BLOCK_HEIGHT
+
+BattleCommonDefine.MapStatus = 1
+BattleCommonDefine.RoomStatus = 2
 
 BattleCommonDefine.Zorder = {
 	Room = 1,
