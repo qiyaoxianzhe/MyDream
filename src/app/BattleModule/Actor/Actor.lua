@@ -101,18 +101,19 @@ function Actor:getStatus()
 	return self.attr_:getStatus()
 end
 
+function Actor:ideal()
+	self.ani_:ideal()
+end
 
-function Actor:move(x,y,step)
-	BattleManager:getInstance():setMove(true)
-	self.location_.x, self.location_.y = self.location_.x + x * step, self.location_.y + y * step
+
+function Actor:move(x,y,callBack)
+	self.location_.x, self.location_.y = self.location_.x + x, self.location_.y + y
 	local posX, posY = self:locationToPosition(cc.p(self.location_.x,self.location_.y))
 	local seq = transition.sequence({
-		cc.MoveTo:create(0.2 * step, cc.p(posX + x, posY + y)),
+		cc.MoveTo:create(0.2, cc.p(posX + x, posY + y)),
 		CCCallFunc:create(function()
-			self.ani_:ideal()
-			BattleManager:getCurrentRoom():checkStopZone(self.location_.x, self.location_.y)
-			BattleManager:getBarrierManager():checkTension(self:getValue(BattleCommonDefine.attribute.power))
-			BattleManager:getInstance():setMove(false)
+			callBack()
+			-- BattleManager:getCurrentRoom():checkStopZone(self.location_.x, self.location_.y)
 		end),
 	})
 	self.node_:runAction(seq)

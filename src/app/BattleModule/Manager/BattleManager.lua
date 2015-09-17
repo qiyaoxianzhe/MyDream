@@ -100,7 +100,9 @@ function BattleManager:initMap_()
 end
 
 function BattleManager:initRoomPanel_()
-	self.roomPanel_ = cc.LayerColor:create(cc.c4b(100, 100, 100, 255),BattleCommonDefine.ROOM_WIDTH,BattleCommonDefine.ROOM_HEIGHT)
+	self.roomPanel_ = cc.Layer:create()
+	self.roomPanel_:setContentSize(cc.size(BattleCommonDefine.BLOCK_SIZE * BattleCommonDefine.BLOCK_WIDTH,
+		BattleCommonDefine.BLOCK_SIZE * BattleCommonDefine.BLOCK_HEIGHT))
     self.battleScene_:addChild(self.roomPanel_)
     self.roomPanel_:ignoreAnchorPointForPosition(false)
     self.roomPanel_:setAnchorPoint(cc.p(0.5,0.5))
@@ -108,7 +110,9 @@ function BattleManager:initRoomPanel_()
 end
 
 function BattleManager:initMapPanel_()
-	self.mapPanel_ = cc.LayerColor:create(cc.c4b(100, 100, 100, 255),display.width,display.height)
+	self.mapPanel_ = cc.Layer:create()
+	self.mapPanel_:setContentSize(cc.size(BattleCommonDefine.MAP_SIZE * BattleCommonDefine.MAP_WIDTH, 
+		BattleCommonDefine.MAP_SIZE * BattleCommonDefine.MAP_HEIGHT))
     self.battleScene_:addChild(self.mapPanel_)
     self.mapPanel_:ignoreAnchorPointForPosition(false)
     self.mapPanel_:setAnchorPoint(cc.p(0.5,0.5))

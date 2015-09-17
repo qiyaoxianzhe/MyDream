@@ -4,7 +4,10 @@
 --
 local BattleCommonDefine = class("BattleCommonDefine")
 
-BattleCommonDefine.MAP_SIZE = 200
+BattleCommonDefine.MAP_SIZE = 100
+BattleCommonDefine.MAP_WIDTH = 10
+BattleCommonDefine.MAP_HEIGHT = 5
+
 BattleCommonDefine.BLOCK_SIZE = 50
 BattleCommonDefine.BLOCK_WIDTH = 14
 BattleCommonDefine.BLOCK_HEIGHT = 8
@@ -22,8 +25,7 @@ BattleCommonDefine.Zorder = {
 }
 
 BattleCommonDefine.attribute = {
-	step = 1,
-	power = 2,
+	power = 1,
 }
 
 BattleCommonDefine.color = {

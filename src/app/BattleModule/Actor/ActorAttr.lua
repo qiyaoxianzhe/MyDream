@@ -39,7 +39,6 @@ end
 function ActorAttr:onCreate()
 	self.status_ = ActorAttr.status.none
 	self.config_ = {
-		[BattleCommonDefine.attribute.step] = 20,
 		[BattleCommonDefine.attribute.power] = 20,
 	}
 end

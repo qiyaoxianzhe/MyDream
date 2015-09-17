@@ -166,7 +166,8 @@ function Room:getActor_(index)
 	return self.actors_[index or 1]
 end
 
-function Room:calulatDirection8(angle,vectory)
+function Room:calulatDirection8(angle)
+	local vectory = cc.p(0,0)
 	if angle < 23 or angle >= 337 then
 		vectory.x = 1
 	elseif angle < 68 and angle >= 23 then
@@ -188,9 +189,11 @@ function Room:calulatDirection8(angle,vectory)
 		vectory.x = 1
 		vectory.y = -1
 	end
+	return vectory
 end
 
-function Room:calulatDirection4(angle,vectory)
+function Room:calulatDirection4(angle)
+	local vectory = cc.p(0,0)
 	if angle < 45 or angle >= 315 then
 		vectory.x = 1
 	elseif angle < 135 and angle >= 45 then
@@ -200,46 +203,46 @@ function Room:calulatDirection4(angle,vectory)
 	elseif angle < 315 and angle >= 225 then
 		vectory.y = -1
 	end
+	return vectory
 end
 
 function Room:controlDirection(angle)
 	local actor = self:getActor_(1)
-	actor:doWithStatus()
-	local canMove = actor:doWithBuff()
-	if not canMove then
-		return
-	end
-	local allStep = actor:getValue(BattleCommonDefine.attribute.step)
-	local location = actor:getLocation()
-	local vectory = cc.p(0,0)
-	local step = 0
-	for i = 1,allStep do
-		if actor:getStatus() == ActorAttr.status.tianqi then
-			self:calulatDirection8(angle,vectory)
-		else
-			self:calulatDirection4(angle,vectory)
-		end
-		if self:checkRunBlock(location.x + vectory.x * (step + 1), location.y + vectory.y * (step + 1)) then
-			step = step + 1
-		else
-			break
-		end
-	end
-	if step <= 0 then
-		BattleManager:getBarrierManager():checkTension(actor:getValue(BattleCommonDefine.attribute.power))
-		return
-	end
-	local power = 1
-	if actor:getStatus() == ActorAttr.status.shenxing then
-		power = 0.5
-	end
+	local power = actor:getStatus() == ActorAttr.status.shenxing and 0.5 or 1
 	local currentPower = actor:getValue(BattleCommonDefine.attribute.power) - power
 	if currentPower <= 0 then
 		self:gameOver_()
 	else
 		actor:setValue(BattleCommonDefine.attribute.power,currentPower)
-		actor:move(vectory.x, vectory.y, step)
+		BattleManager:getBarrierManager():checkTension(actor:getValue(BattleCommonDefine.attribute.power))
+		actor:doWithStatus()
+		local canMove = actor:doWithBuff()
+		if not canMove then
+			return
+		end
+		local location = actor:getLocation()
+		local vectory = cc.p(0,0)
+		if actor:getStatus() == ActorAttr.status.tianqi then
+			vectory = self:calulatDirection8(angle)
+		else
+			vectory = self:calulatDirection4(angle)
+		end
+		BattleManager:getInstance():setMove(true)
+		self:moveActor(vectory)
+	end
+end
+
+function Room:moveActor(vectory)
+	local actor = self:getActor_(1)
+	local location = actor:getLocation()
+	if self:checkRunBlock(location.x + vectory.x, location.y + vectory.y) then
+		actor:move(vectory.x, vectory.y, function()
+			self:moveActor(vectory)
+		end)
+	else
+		actor:ideal()
 		self:updateBlock_()
+		BattleManager:getInstance():setMove(false)
 	end
 end
 
