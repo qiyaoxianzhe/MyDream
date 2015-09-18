@@ -117,12 +117,6 @@ function Room:checkRunBlock(x,y)
 		local item = BattleManager:getItemManager():getSysChild(name)
 		return actor:doWithItem(item)
 	end
-	return true
-end
-
-function Room:checkStopZone(x,y)
-	local type, name = self.blocks_[x.."_"..y].type, self.blocks_[x.."_"..y].name
-	local actor = self:getActor_(1)
 	if actor:getStatus() == ActorAttr.status.wanxiang then
 		local area = {
 			{x = x + 1, y = y},
@@ -144,7 +138,12 @@ function Room:checkStopZone(x,y)
 			end
 		end
 	end
+	return true
+end
 
+function Room:checkStopZone(x,y)
+	local type, name = self.blocks_[x.."_"..y].type, self.blocks_[x.."_"..y].name
+	local actor = self:getActor_(1)
 	if type == common.Type.Zone then
 		local zone = BattleManager:getZoneManager():getSysChild(name)
 		actor:doWithZone(zone)
@@ -214,7 +213,6 @@ function Room:controlDirection(angle)
 		self:gameOver_()
 	else
 		actor:setValue(BattleCommonDefine.attribute.power,currentPower)
-		BattleManager:getBarrierManager():checkTension(actor:getValue(BattleCommonDefine.attribute.power))
 		actor:doWithStatus()
 		local canMove = actor:doWithBuff()
 		if not canMove then
@@ -242,6 +240,8 @@ function Room:moveActor(vectory)
 	else
 		actor:ideal()
 		self:updateBlock_()
+		BattleManager:getBarrierManager():checkTension(actor:getValue(BattleCommonDefine.attribute.power))
+		BattleManager:getCurrentRoom():checkStopZone(actor:getLocation().x, actor:getLocation().y)
 		BattleManager:getInstance():setMove(false)
 	end
 end

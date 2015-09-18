@@ -41,6 +41,7 @@ function Actor:doWithBarrier(barrier)
 	local dead = barrier:isDead()
 	if dead or self:getStatus() == ActorAttr.status.qiangxi then
 		barrier:disppear()
+		return true
 	end
 	return false
 end
@@ -113,7 +114,6 @@ function Actor:move(x,y,callBack)
 		cc.MoveTo:create(0.2, cc.p(posX + x, posY + y)),
 		CCCallFunc:create(function()
 			callBack()
-			-- BattleManager:getCurrentRoom():checkStopZone(self.location_.x, self.location_.y)
 		end),
 	})
 	self.node_:runAction(seq)
