@@ -8,7 +8,7 @@ BarrierAni.TYPE = "BARRIERANI_TYPE"
 
 function BarrierAni:onCreate(node)
 	self:setNode(node)
-	self.ani_ = display.newSprite("barrier/Barrier_tieqiu.png")
+	self.ani_ = display.newSprite("barrier/wall.png")
 	node:addChild(self.ani_)
 end
 

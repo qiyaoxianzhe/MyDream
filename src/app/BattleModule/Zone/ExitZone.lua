@@ -15,7 +15,7 @@ function ExitZone:getId()
 end
 
 function ExitZone:hit(actor)
-	BattleManager:getCurrentRoom():finish()
+	BattleManager:getCurrentRoom():finish(true)
 end
 
 return ExitZone

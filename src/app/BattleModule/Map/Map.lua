@@ -9,7 +9,7 @@ Map.TYPE = "MAP_TYPE"
 function Map:onCreate(mapPanel,id)
 	self.mapPanel_ = mapPanel
 	self.id_ = id
-	self.actorLocation_ = cc.p(0,0)
+	self.actorLocation_ = cc.p(MapVO.actor[id].x, MapVO.actor[id].y)
 	self.roomIds_ = {}
 	self.roomKeys_ = {}
 end
@@ -21,7 +21,13 @@ end
 function Map:initMap(id)
 	self.id_ = id
 	self:initRoom_()
-	self:initActor_(1,2)
+	self:initActor_(self.actorLocation_.x, self.actorLocation_.y)
+end
+
+function Map:resetGame()
+	self.actorLocation_.x, self.actorLocation_.y = MapVO.actor[self.id_].x, MapVO.actor[self.id_].y
+	self.roomIds_ = {}
+	self.roomKeys_ = {}
 end
 
 function Map:initActor_(x,y)

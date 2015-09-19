@@ -9,6 +9,7 @@ PoisonBuff.TYPE = "POSISONBUFF_TYPE"
 function PoisonBuff:hit(actor)
 	local currentPower = actor:getValue(BattleCommonDefine.attribute.power)
 	actor:setValue(BattleCommonDefine.attribute.power,currentPower + BuffVO.value[self:getId()])
+	actor:showHitNum(BuffVO.value[self:getId()],3)
 	return true
 end
 

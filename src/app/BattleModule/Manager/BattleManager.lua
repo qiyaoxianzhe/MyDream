@@ -77,7 +77,7 @@ function BattleManager:onCreate(battleScene)
 	self:initMap_()
 	self:initRoom_()
     self:initTouch_()
-    self:initUI_()
+    self:initBattleUI_()
     self:initShowdow_()
 end
 
@@ -297,9 +297,17 @@ function BattleManager:enterMap(id)
 	self:getBattleUI():showUI(false)
 end
 
-function BattleManager:initUI_()
+function BattleManager:initBattleUI_()
 	self.battleUI_ = BattleUI.new("BattleUI",display.size)
 	self.battleScene_:addChild(self.battleUI_:getView())
+end
+
+function BattleManager:getBattleScene()
+	return self.battleScene_
+end
+
+function BattleManager:resetGame()
+	self.map_:resetGame()
 end
 
 function BattleManager:beginGame()

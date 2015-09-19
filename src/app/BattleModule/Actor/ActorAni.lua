@@ -22,6 +22,18 @@ function ActorAni:trans()
     self.ani_:runAction(cc.FadeIn:create(0.5))
 end
 
+function ActorAni:showHitNum(num,color)
+    local hitNum = display.newTTFLabel({size = 20, text = num, color = BattleCommonDefine.color[color]})
+    self.node_:addChild(hitNum)
+    local seq = transition.sequence({
+        cc.Spawn:create(cc.MoveBy:create(0.8, cc.p(0,60)), cc.FadeOut:create(0.8)),
+        CCCallFunc:create(function()
+          hitNum:removeFromParent()
+        end),
+    })
+    hitNum:runAction(seq)
+end
+
 function ActorAni:setParticle(type)
 	if self.particle_ then
 		self.node_:removeChild(self.particle_, true)
@@ -53,10 +65,10 @@ end
 function ActorAni:ideal()
 	self.ani_:setPosition(cc.p(0,0))
 	local seq = transition.sequence({
-    	cc.MoveBy:create(0.15, cc.p(0, 5)),
-    	cc.MoveBy:create(0.15,cc.p(0, -5)),
-    })
-    self.ani_:runAction(cc.RepeatForever:create(seq))
+    cc.MoveBy:create(0.15, cc.p(0, 5)),
+    cc.MoveBy:create(0.15,cc.p(0, -5)),
+  })
+  self.ani_:runAction(cc.RepeatForever:create(seq))
 end
 
 return ActorAni

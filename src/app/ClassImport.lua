@@ -29,6 +29,7 @@ ClassImport.define = {
 	ClassImport.Components.."System",
 	ClassImport.Components.."Locationer",
 	ClassImport.UIRoot.."BattleUI",
+	ClassImport.UIRoot.."ResultUI",
 	ClassImport.GameRoot.."GameManager",
 	ClassImport.GameRoot.."MusicManager",
 	ClassImport.BattleRoot.."BattleCommonDefine",

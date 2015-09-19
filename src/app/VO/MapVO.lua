@@ -27,4 +27,8 @@ MapVO.room = {
 	},
 }
 
+MapVO.actor = {
+	[160001] = {x = 1, y = 2}
+}
+
 return MapVO

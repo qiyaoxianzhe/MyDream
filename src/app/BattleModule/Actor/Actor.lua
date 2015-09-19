@@ -46,6 +46,10 @@ function Actor:doWithBarrier(barrier)
 	return false
 end
 
+function Actor:showHitNum(num,color)
+	self.ani_:showHitNum(num,color)
+end
+
 function Actor:doWithBuff()
 	local canMove = true
 	local color = 7

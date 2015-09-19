@@ -18,6 +18,7 @@ function NormalBarrier:hit(actor)
 	local currentPower = actor:getValue(BattleCommonDefine.attribute.power)
 	if actor:getStatus() ~= ActorAttr.status.bati then
 		actor:setValue(BattleCommonDefine.attribute.power,currentPower + BarrierVO.value[self:getId()])
+		actor:showHitNum(BarrierVO.value[self:getId()],1)
 	end
 end
 

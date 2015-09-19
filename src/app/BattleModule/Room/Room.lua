@@ -17,8 +17,9 @@ Room.order = {
 function Room:onCreate(roomPanel,id)
 	self.id_ = id
 	self.blocks_ = {}
-	self.actors_ = {}
+	self.actors_ = nil
 	self.roomPanel_ = roomPanel
+	self.isFinish_ = false
 end
 
 function Room:getId()
@@ -109,7 +110,7 @@ function Room:checkRunBlock(x,y)
 		return false
 	end
 	local type, name = self.blocks_[x.."_"..y].type, self.blocks_[x.."_"..y].name
-	local actor = self:getActor_(1)
+	local actor = self:getActor_()
 	if type == common.Type.Barrier then
 		local barrier = BattleManager:getBarrierManager():getSysChild(name)
 		return actor:doWithBarrier(barrier)
@@ -143,7 +144,7 @@ end
 
 function Room:checkStopZone(x,y)
 	local type, name = self.blocks_[x.."_"..y].type, self.blocks_[x.."_"..y].name
-	local actor = self:getActor_(1)
+	local actor = self:getActor_()
 	if type == common.Type.Zone then
 		local zone = BattleManager:getZoneManager():getSysChild(name)
 		actor:doWithZone(zone)
@@ -156,13 +157,13 @@ function Room:initPlayer_()
 	for i = 1, #actorsMap do
 		local location = cc.p(actorsMap[i].x,actorsMap[i].y) 
 		local actor = BattleManager:getActorManager():addActor(actorsMap[i].id, actorsMap[i].power, location)
-		self.actors_[#self.actors_ + 1] = actor
+		self.actors_ = actor
 		self.roomPanel_:addChild(actor:getNode(), Room.order.actor)
 	end
 end
 
-function Room:getActor_(index)
-	return self.actors_[index or 1]
+function Room:getActor_()
+	return self.actors_
 end
 
 function Room:calulatDirection8(angle)
@@ -206,11 +207,11 @@ function Room:calulatDirection4(angle)
 end
 
 function Room:controlDirection(angle)
-	local actor = self:getActor_(1)
+	local actor = self:getActor_()
 	local power = actor:getStatus() == ActorAttr.status.shenxing and 0.5 or 1
 	local currentPower = actor:getValue(BattleCommonDefine.attribute.power) - power
 	if currentPower <= 0 then
-		self:gameOver_()
+		self:finish(false)
 	else
 		actor:setValue(BattleCommonDefine.attribute.power,currentPower)
 		actor:doWithStatus()
@@ -231,7 +232,7 @@ function Room:controlDirection(angle)
 end
 
 function Room:moveActor(vectory)
-	local actor = self:getActor_(1)
+	local actor = self:getActor_()
 	local location = actor:getLocation()
 	if self:checkRunBlock(location.x + vectory.x, location.y + vectory.y) then
 		actor:move(vectory.x, vectory.y, function()
@@ -246,13 +247,9 @@ function Room:moveActor(vectory)
 	end
 end
 
-function Room:finish()
-	--TODO
-	print("finish room")
-end
-
-function Room:gameOver_()
-	BattleManager:getInstance():setMove(true)
+function Room:finish(isWin)
+	self.resultUI_ = ResultUI.new("ResultUI",display.size,isWin)
+	BattleManager:getInstance():getBattleScene():addChild(self.resultUI_:getView())
 end
 
 return Room

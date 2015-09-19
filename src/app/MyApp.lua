@@ -3,6 +3,7 @@ local MyApp = class("MyApp", cc.load("mvc").AppBase)
 local ClassImport = import(".ClassImport")
 function MyApp:ctor()
 	MyApp.super.ctor(self)
+	CCFileUtils:sharedFileUtils():addSearchPath("res/labelFont/")
 	self:classImport_()
     math.randomseed(os.time())
 end
