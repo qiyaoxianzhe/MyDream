@@ -71,7 +71,7 @@ function Actor:doWithZone(zone)
 end
 
 function Actor:doWithItem(item)
-	GameManager:getInstance():addResource(item:getId(), 1)
+	GameManager:getInstance():setResource(item:getId(), 1)
 	item:disppear()
 	return true
 end
@@ -88,7 +88,11 @@ end
 function Actor:setValue(attribute, value)
 	self.attr_:setValue(attribute, value)
 	if BattleCommonDefine.attribute.power == attribute then
-		BattleManager:getBattleUI():setPowerNum(value)
+		if value < 0 then
+			BattleManager:getInstance():finishRoom(false)
+		else
+			BattleManager:getBattleUI():setPowerNum(value)
+		end
 	end
 end
 
@@ -108,6 +112,7 @@ end
 
 function Actor:ideal()
 	self.ani_:ideal()
+	BattleManager:getCurrentRoom():updateBlock_()	
 end
 
 

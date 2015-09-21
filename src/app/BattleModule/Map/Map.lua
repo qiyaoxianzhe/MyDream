@@ -94,6 +94,8 @@ function Map:controlDirection(angle)
 	local key = GameManager:getInstance():getResource(130003)
 	if key < self.roomKeys_[x.."_"..y] then
 		return
+	else
+		GameManager:getInstance():setResource(130003,-(key - self.roomKeys_[x.."_"..y]))
 	end
 	if x == self.actorLocation_.x and y == self.actorLocation_.y then
 		return

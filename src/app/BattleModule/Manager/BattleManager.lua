@@ -61,6 +61,7 @@ function BattleManager:onCreate(battleScene)
     printf("BattleManager:onCreate")
     self.battleScene_ = battleScene
     self.isMove_ = false
+    self.isFinish_ = false
     self.status_ = BattleCommonDefine.MapStatus
     self.barrierManager_ = BarrierManager.new()
     self.actorManager_ = ActorManager.new()
@@ -277,6 +278,17 @@ function BattleManager:clearMap()
     self.mapPanel_:setVisible(false)
 end
 
+function BattleManager:setIdFinish(isFinish)
+	self.isFinish_ = isFinish
+end
+
+function BattleManager:finishRoom(isWin)
+	if not self.isFinish_ then
+		self:setIdFinish(true)
+		self.room_:finish(isWin)
+	end
+end
+
 function BattleManager:enterRoom(id)
 	self:closeShowdow_(false,function()
 		self:openShowdow_(true)
@@ -313,7 +325,7 @@ end
 function BattleManager:beginGame()
 	self:clearRoom()
 	self:enterMap(160001)
-	MusicManager:getInstance():playAudio("music/1.mp3")
+	-- MusicManager:getInstance():playAudio("music/1.mp3")
 end
 
 function BattleManager:onUpdate(t)

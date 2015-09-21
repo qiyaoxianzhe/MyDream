@@ -28,6 +28,17 @@ BattleCommonDefine.attribute = {
 	power = 1,
 }
 
+BattleCommonDefine.area = {
+	{x = 1, y = 0},
+	{x = -1, y = 0},
+	{x = 0, y = 1},
+	{x = 0, y = -1},
+	{x = 1, y = 1},
+	{x = 1, y = -1},
+	{x = -1, y = 1},
+	{x = -1, y = -1},
+}
+
 BattleCommonDefine.color = {
 	[1] = cc.c3b(255,0,0),
 	[2] = cc.c3b(255,255,0),

@@ -46,9 +46,13 @@ end
 function Room:initBlock_()
 	for i = 1, BattleCommonDefine.BLOCK_WIDTH do
 		for j = 1, BattleCommonDefine.BLOCK_HEIGHT do
-			self.blocks_[i.."_"..j] = "0" 
+			self.blocks_[i.."_"..j] = nil 
 		end
 	end
+end
+
+function Room:getBlocks()
+	return self.blocks_
 end
 
 function Room:updateBlock_()
@@ -105,33 +109,34 @@ function Room:initZone_()
 	end
 end
 
+function Room:isEmpty(x,y)
+	if not self.blocks_[x.."_"..y] and x <= BattleCommonDefine.BLOCK_WIDTH and x >= 1 and 
+			y <= BattleCommonDefine.BLOCK_HEIGHT and y >= 1 then
+		return true
+	end
+	return false
+end
+
 function Room:checkRunBlock(x,y)
 	if x > BattleCommonDefine.BLOCK_WIDTH or x < 1 or y > BattleCommonDefine.BLOCK_HEIGHT or y < 1 then
 		return false
 	end
-	local type, name = self.blocks_[x.."_"..y].type, self.blocks_[x.."_"..y].name
 	local actor = self:getActor_()
-	if type == common.Type.Barrier then
-		local barrier = BattleManager:getBarrierManager():getSysChild(name)
-		return actor:doWithBarrier(barrier)
-	elseif type == common.Type.Item then
-		local item = BattleManager:getItemManager():getSysChild(name)
-		return actor:doWithItem(item)
+	if self.blocks_[x.."_"..y] then
+		local type, name = self.blocks_[x.."_"..y].type, self.blocks_[x.."_"..y].name
+		if type == common.Type.Barrier then
+			local barrier = BattleManager:getBarrierManager():getSysChild(name)
+			return actor:doWithBarrier(barrier)
+		elseif type == common.Type.Item then
+			local item = BattleManager:getItemManager():getSysChild(name)
+			return actor:doWithItem(item)
+		end
 	end
 	if actor:getStatus() == ActorAttr.status.wanxiang then
-		local area = {
-			{x = x + 1, y = y},
-			{x = x - 1, y = y},
-			{x = x, y = y + 1},
-			{x = x, y = y - 1},
-			{x = x + 1, y = y + 1},
-			{x = x + 1, y = y - 1},
-			{x = x - 1, y = y + 1},
-			{x = x - 1, y = y - 1},
-		}
-		for i = 1, #area do
-			if self.blocks_[area[i].x.."_"..area[i].y] then
-				local type, name = self.blocks_[area[i].x.."_"..area[i].y].type, self.blocks_[area[i].x.."_"..area[i].y].name
+		for i = 1, #BattleCommonDefine.area do
+			local area = BattleCommonDefine.area
+			if self.blocks_[area[i].x + x.."_"..area[i].y + y] then
+				local type, name = self.blocks_[area[i].x + x.."_"..area[i].y + y].type, self.blocks_[area[i].x + x.."_"..area[i].y + y].name
 				if type == common.Type.Item then
 					local item = BattleManager:getItemManager():getSysChild(name)
 					actor:doWithItem(item)
@@ -159,6 +164,20 @@ function Room:initPlayer_()
 		local actor = BattleManager:getActorManager():addActor(actorsMap[i].id, actorsMap[i].power, location)
 		self.actors_ = actor
 		self.roomPanel_:addChild(actor:getNode(), Room.order.actor)
+	end
+end
+
+function Room:barriersMove()
+	local barriers = BattleManager:getBarrierManager():getAllBarriers()
+	for k, barrier in pairs(barriers) do
+		local x, y = BarrierVO.velocity[barrier:getId()].x, BarrierVO.velocity[barrier:getId()].y
+		local checkX,checkY = barrier:getLocation().x + x, barrier:getLocation().y + y
+		if x ~= 0 or y ~= 0 then
+			local step = BarrierVO.step[barrier:getId()]
+			if self:isEmpty(checkX, checkY) then
+				barrier:move(x,y)
+			end
+		end
 	end
 end
 
@@ -210,25 +229,21 @@ function Room:controlDirection(angle)
 	local actor = self:getActor_()
 	local power = actor:getStatus() == ActorAttr.status.shenxing and 0.5 or 1
 	local currentPower = actor:getValue(BattleCommonDefine.attribute.power) - power
-	if currentPower <= 0 then
-		self:finish(false)
-	else
-		actor:setValue(BattleCommonDefine.attribute.power,currentPower)
-		actor:doWithStatus()
-		local canMove = actor:doWithBuff()
-		if not canMove then
-			return
-		end
-		local location = actor:getLocation()
-		local vectory = cc.p(0,0)
-		if actor:getStatus() == ActorAttr.status.tianqi then
-			vectory = self:calulatDirection8(angle)
-		else
-			vectory = self:calulatDirection4(angle)
-		end
-		BattleManager:getInstance():setMove(true)
-		self:moveActor(vectory)
+	actor:setValue(BattleCommonDefine.attribute.power,currentPower)
+	actor:doWithStatus()
+	local canMove = actor:doWithBuff()
+	if not canMove then
+		return
 	end
+	local location = actor:getLocation()
+	local vectory = cc.p(0,0)
+	if actor:getStatus() == ActorAttr.status.tianqi then
+		vectory = self:calulatDirection8(angle)
+	else
+		vectory = self:calulatDirection4(angle)
+	end
+	BattleManager:getInstance():setMove(true)
+	self:moveActor(vectory)
 end
 
 function Room:moveActor(vectory)
@@ -240,14 +255,15 @@ function Room:moveActor(vectory)
 		end)
 	else
 		actor:ideal()
-		self:updateBlock_()
 		BattleManager:getBarrierManager():checkTension(actor:getValue(BattleCommonDefine.attribute.power))
 		BattleManager:getCurrentRoom():checkStopZone(actor:getLocation().x, actor:getLocation().y)
+		self:barriersMove()
 		BattleManager:getInstance():setMove(false)
 	end
 end
 
 function Room:finish(isWin)
+	print("finishfinish")
 	self.resultUI_ = ResultUI.new("ResultUI",display.size,isWin)
 	BattleManager:getInstance():getBattleScene():addChild(self.resultUI_:getView())
 end

@@ -32,8 +32,10 @@ function BarrierManager:createBarrier(id, location)
 	elseif BarrierVO.type[id] == BarrierVO.barrierType.enchantBarrier or BarrierVO.type[id] == BarrierVO.barrierType.enchantPower or
 		BarrierVO.type[id] == BarrierVO.barrierType.enchantZone then
 		barrier = ConditionBarrier.new(id, location)
-	elseif BarrierVO.type[id] == BarrierVO.barrierType.wall then
+	elseif BarrierVO.type[id] == BarrierVO.barrierType.wall or BarrierVO.type[id] == BarrierVO.barrierType.tree then
 		barrier = WallBarrier.new(id, location)
+	elseif BarrierVO.type[id] == BarrierVO.barrierType.stone then
+		barrier = StoneBarrier.new(id, location)
 	end
 	return barrier
 end

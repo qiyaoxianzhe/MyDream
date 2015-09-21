@@ -23,12 +23,12 @@ function GameManager:clean()
 	GLOBAL_VAR.gameManager_ = nil
 end
 
---复活130001 英雄符文130002 钥匙130003
-function GameManager:addResource(resourcsType, resourcsNum)
+--复活130001 英雄符文130002 钥匙130003 火石130004 炮弹130005
+function GameManager:setResource(resourcsType, resourcsNum)
 	if not self.resource_[resourcsType] then
 		self.resource_[resourcsType] = 0
 	end
-	self.resource_[resourcsType] = self.resource_[resourcsType] + 1
+	self.resource_[resourcsType] = self.resource_[resourcsType] + resourcsNum
 end
 
 function GameManager:getResource(resourcsType)

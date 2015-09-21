@@ -24,8 +24,12 @@ function ZoneManager:createZone(id, location)
 		zone = TransZone.new(id, location)
 	elseif ZoneVO.type[id] == ZoneVO.zoneType.exit then
 		zone = ExitZone.new(id, location)
-	elseif ZoneVO.type[id] == ZoneVO.zoneType.Tension then
+	elseif ZoneVO.type[id] == ZoneVO.zoneType.tension then
 		zone = TensionZone.new(id, location)
+	elseif ZoneVO.type[id] == ZoneVO.zoneType.artillery then
+		zone = ArtilleryZone.new(id, location)
+	elseif ZoneVO.type[id] == ZoneVO.zoneType.bonfire then
+		zone = BonfireZone.new(id, location)
 	end
 	return zone
 end

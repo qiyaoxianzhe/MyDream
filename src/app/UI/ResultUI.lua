@@ -29,6 +29,7 @@ function ResultUI:viewOnEnter()
 			end
 			BattleManager:getInstance():clearRoom()
 			BattleManager:getInstance():enterMap(160001)
+			BattleManager:getInstance():setIdFinish(false)
 		end),
 	})
 	self.Text_1:runAction(seq)

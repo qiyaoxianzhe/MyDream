@@ -12,6 +12,7 @@ function Barrier:onCreate(id, location)
 	self:addSysChild(self.ani_)
 	self.id_ = id
 	self.hitCount_ = BarrierVO.hitCount[id]
+	self.direction_ = 1
 end
 
 function Barrier:getId()
@@ -30,6 +31,13 @@ function Barrier:isDead()
 end
 
 function Barrier:hit(actor)
+end
+
+function Barrier:move(x,y)
+	self.location_.x, self.location_.y = self.location_.x + x, self.location_.y + y
+	local posX, posY = self:locationToPosition(cc.p(self.location_.x,self.location_.y))
+	self.node_:runAction(cc.MoveTo:create(0.2, cc.p(posX + x, posY + y)))
+	BattleManager:getCurrentRoom():updateBlock_()	
 end
 
 function Barrier:disppear()
