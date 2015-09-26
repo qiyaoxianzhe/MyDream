@@ -9,8 +9,8 @@ BattleCommonDefine.MAP_WIDTH = 10
 BattleCommonDefine.MAP_HEIGHT = 5
 
 BattleCommonDefine.BLOCK_SIZE = 50
-BattleCommonDefine.BLOCK_WIDTH = 14
-BattleCommonDefine.BLOCK_HEIGHT = 8
+BattleCommonDefine.BLOCK_WIDTH = 13
+BattleCommonDefine.BLOCK_HEIGHT = 7
 
 BattleCommonDefine.ROOM_WIDTH = BattleCommonDefine.BLOCK_SIZE * BattleCommonDefine.BLOCK_WIDTH
 BattleCommonDefine.ROOM_HEIGHT = BattleCommonDefine.BLOCK_SIZE * BattleCommonDefine.BLOCK_HEIGHT

@@ -12,6 +12,7 @@ Room.order = {
 	actor = 3,
 	barrier = 3,
 	item = 3,
+	bullet = 4,
 }
 
 function Room:onCreate(roomPanel,id)
@@ -34,6 +35,10 @@ function Room:initLocationer(id)
 	self:initPlayer_()
 	self:initZone_()
 	self:updateBlock_()
+end
+
+function Room:addBullet(bullet)
+	self.roomPanel_:addChild(bullet, Room.order.bullet)
 end
 
 function Room:initTerrain_()
@@ -169,13 +174,33 @@ end
 
 function Room:barriersMove()
 	local barriers = BattleManager:getBarrierManager():getAllBarriers()
+
+	local function checkBarrierCanMove(barrier,x,y,step)
+		local isMove = true
+		for i = 1, step do
+			local checkX,checkY = barrier:getLocation().x + x * i, barrier:getLocation().y + y * i
+			if not self:isEmpty(checkX, checkY) then
+				isMove = false
+				break
+			end
+		end
+		return isMove
+	end
+
 	for k, barrier in pairs(barriers) do
-		local x, y = BarrierVO.velocity[barrier:getId()].x, BarrierVO.velocity[barrier:getId()].y
-		local checkX,checkY = barrier:getLocation().x + x, barrier:getLocation().y + y
+		local x, y = BarrierVO.velocity[barrier:getId()].x * barrier:getDirection(), 
+			BarrierVO.velocity[barrier:getId()].y * barrier:getDirection()
+		local step = BarrierVO.step[barrier:getId()]
 		if x ~= 0 or y ~= 0 then
-			local step = BarrierVO.step[barrier:getId()]
-			if self:isEmpty(checkX, checkY) then
-				barrier:move(x,y)
+			if checkBarrierCanMove(barrier,x,y,step) then
+				barrier:move(x, y, step)
+			else
+				barrier:changeDirection()
+				local x, y = BarrierVO.velocity[barrier:getId()].x * barrier:getDirection(), 
+					BarrierVO.velocity[barrier:getId()].y * barrier:getDirection()
+				if checkBarrierCanMove(barrier,x,y,step) then
+					barrier:move(x, y, step)
+				end
 			end
 		end
 	end
@@ -256,14 +281,13 @@ function Room:moveActor(vectory)
 	else
 		actor:ideal()
 		BattleManager:getBarrierManager():checkTension(actor:getValue(BattleCommonDefine.attribute.power))
-		BattleManager:getCurrentRoom():checkStopZone(actor:getLocation().x, actor:getLocation().y)
+		self:checkStopZone(actor:getLocation().x, actor:getLocation().y)
 		self:barriersMove()
 		BattleManager:getInstance():setMove(false)
 	end
 end
 
 function Room:finish(isWin)
-	print("finishfinish")
 	self.resultUI_ = ResultUI.new("ResultUI",display.size,isWin)
 	BattleManager:getInstance():getBattleScene():addChild(self.resultUI_:getView())
 end

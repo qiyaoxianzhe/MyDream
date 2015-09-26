@@ -15,28 +15,36 @@ function Barrier:onCreate(id, location)
 	self.direction_ = 1
 end
 
+function Barrier:changeDirection()
+	self.direction_ = self.direction_ * -1
+end
+
+function Barrier:getDirection()
+	return self.direction_ 
+end
+
 function Barrier:getId()
 	return self.id_
 end
 
 function Barrier:isDead()
-	local dead = false
+	local isDead = false
 	if self.hitCount_ ~= -1 then
 		self.hitCount_ = self.hitCount_ - 1
 		if self.hitCount_ <= 0 then
-			dead = true
+			isDead = true
 		end
 	end
-	return dead
+	return isDead
 end
 
 function Barrier:hit(actor)
 end
 
-function Barrier:move(x,y)
-	self.location_.x, self.location_.y = self.location_.x + x, self.location_.y + y
+function Barrier:move(x,y,step)
+	self.location_.x, self.location_.y = self.location_.x + x * step, self.location_.y + y * step
 	local posX, posY = self:locationToPosition(cc.p(self.location_.x,self.location_.y))
-	self.node_:runAction(cc.MoveTo:create(0.2, cc.p(posX + x, posY + y)))
+	self.node_:runAction(cc.MoveTo:create(0.2 * step, cc.p(posX + x, posY + y)))
 	BattleManager:getCurrentRoom():updateBlock_()	
 end
 
