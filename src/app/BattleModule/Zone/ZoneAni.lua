@@ -8,7 +8,7 @@ ZoneAni.TYPE = "ZONEANI_TYPE"
 
 function ZoneAni:onCreate(node)
 	self:setNode(node)
-	self.ani_ = display.newSprite("zone/zone.png")
+	self.ani_ = display.newSprite("zone/hero1.png")
 	node:addChild(self.ani_)
 end
 

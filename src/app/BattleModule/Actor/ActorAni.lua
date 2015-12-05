@@ -8,7 +8,7 @@ ActorAni.TYPE = "ACTORANI_TYPE"
 
 function ActorAni:onCreate(node)
 	self:setNode(node)
-	self.ani_ = display.newSprite("actor/tiny.png")
+	self.ani_ = display.newSprite("actor/role.png")
 	node:addChild(self.ani_,2)
 	self:ideal()
 end
@@ -63,12 +63,6 @@ function ActorAni:setColor(color)
 end
 
 function ActorAni:ideal()
-	self.ani_:setPosition(cc.p(0,0))
-	local seq = transition.sequence({
-    cc.MoveBy:create(0.15, cc.p(0, 5)),
-    cc.MoveBy:create(0.15,cc.p(0, -5)),
-  })
-  self.ani_:runAction(cc.RepeatForever:create(seq))
 end
 
 return ActorAni

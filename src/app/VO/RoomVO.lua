@@ -19,9 +19,9 @@ RoomVO.actor = {
 }
 
 RoomVO.terrain = {
-	[110001] = "terrain/grass.png",
-	[110002] = "terrain/grass.png",
-	[110003] = "terrain/grass.png",
+	[110001] = "terrain/block.png",
+	[110002] = "terrain/block.png",
+	[110003] = "terrain/block.png",
 }
 
 RoomVO.zone = {
